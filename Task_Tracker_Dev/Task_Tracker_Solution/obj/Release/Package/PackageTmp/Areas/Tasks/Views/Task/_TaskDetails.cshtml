@@ -1,0 +1,118 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_Solution.Utility
+
+<div class="main-card mb-3 card">
+    <div class="card-header-tab card-header refheader">
+        <div class="card-header-title text-capitalize taskdetailsheader">
+            @*<i class="header-icon pe-7s-note icon-gradient bg-premium-dark"> </i>*@
+            @if (@Model.priority != null)
+            {
+                <i class="@Model.priority.priority_icon" title="@Model.priority.priority_name"></i>
+            }
+            <span class="ml-2"> @Model.task_subject</span>
+            @*@Html.HiddenFor(x => x.task_subject, new { @id = "hidTaskSubject" })*@
+        </div>
+        <div class="btn-actions-pane-right text-capitalize">
+            <div class="@Model.status.status_icon">
+                @Model.status.status_name
+            </div>
+        </div>
+    </div>
+    <div class="card-body pt-1">
+        @Html.HiddenFor(x => x.module_syscode, new object { })
+        <div class="form-row">
+            <div class="col-md-12">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class=""><b>Task Details:</b> </label>
+                    <span style='white-space:pre-wrap;'>@Model.task_details</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class=""><b>Project:</b> </label>
+                    <label>@(Model.project?.project_name)</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class=""><b>Module:</b></label>
+                    <label class="">@(Model.module?.module_name)</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class=""><b>Workflow:</b> </label>
+                    <label> @Model.workflow_name</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class=""><b>Workflow Level:</b></label>
+                    <label class=""> @Model.level_name</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class=""><b>Task Owner:</b> </label>
+                    <label>@Model.owner</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class=""><b>On Behalf of:</b></label>
+                    <label class="">@Model.onBehalf</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+
+            <div class="col-md-6">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class=""><b>Category:</b> </label>
+                    <label class="">@(Model.category?.category_name)</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class=""><b>Target Date</b></label>
+                    @Html.DisplayFor(model => model.target_date)
+
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-12">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class=""><b>Members</b></label>
+                    <label class="labeldata">@Model.members</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-12">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class=""><b>Attachments</b></label>
+                    @Html.FileLinkFor(Model.lstAttachments)
+                    @*<ul class="p-0 attachmentul">
+                            @foreach (var attachment in Model.lstAttachments)
+                            {
+                                <li>
+                                    <a href="@cWebApiNames.AppDownloadAttachments?AttachGuid=@attachment.attachment_identifier&MFileId=@attachment.mongo_file_id&FileName=@attachment.attachment_filename">
+                                        <i class="fa fa-paperclip btn-icon-wrapper"></i> @attachment.attachment_filename
+                                    </a>
+                                </li>
+                            }
+                        </ul>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

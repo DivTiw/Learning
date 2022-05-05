@@ -1,0 +1,8 @@
+
+============================================================================================================================================
+Employee SysCode:5120
+Employee Name:
+Date & Time:21-07-2020 07:09:58.PM
+Action :TaskAPIController.SaveTask_Mobile
+Error Message :An error occurred while updating the entries. See the inner exception for details.
+============================================================================================================================================

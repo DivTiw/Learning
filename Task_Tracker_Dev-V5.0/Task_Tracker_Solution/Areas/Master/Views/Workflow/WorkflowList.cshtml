@@ -1,0 +1,83 @@
+﻿@using Task_Tracker_CommonLibrary.Utility;
+@model IList<Task_Tracker_Solution.Areas.Master.Models.WorkflowViewmodel>
+@{
+    ViewBag.Title = "WorkFlows";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Content/jquery-base64-master/jquery.base64.js"></script>
+<script src="~/Content/jquery-base64-master/jquery.base64.min.js"></script>
+
+<script type="text/javascript">
+
+    function EditWorkflow(id) {
+        //alert(id);
+        try {
+
+            workflow_syscode = $.base64.encode(id);
+            var url = '@Url.Action("CreateWorkflow", "Workflow", new { id = "_syscode" })';
+            window.location.href = url.replace('_syscode', workflow_syscode);
+
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+</script>
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-menu icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div>WorkFlows</div>
+        </div>
+        <div class="page-title-actions">
+            <a class="mr-2 btn-icon btn-square btn btn btn-light btn-shadow" href="../Workflow/CreateWorkflow"><i class="pe-7s-ticket btn-icon-wrapper"> </i>Create Workflow</a>
+        </div>
+    </div>
+</div>
+
+<div class="main-card mb-2 card">
+
+    <div class="card-body">
+        <table class="mb-0 table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center">Sr No.</th>
+                    <th>Work Flow Name</th>
+                    <th>Created By</th>
+                    <th>Created On</th>
+                    <th class="text-center">Is Active</th>
+                    <th class="text-center">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    var cnt = 0;
+                    foreach (var workflow in Model)
+                    {
+                        cnt = cnt + 1;
+                        <tr>
+                            <td class="text-center">@cnt</td>
+                            <td>@workflow.workflow_name</td>
+                            <td>@workflow.created_by_Name</td>
+                            <td>@Html.DisplayFor(m => workflow.created_on)</td>
+                            <td>@workflow.is_active.CastToYesNo()</td>
+                            <td class="text-center">
+                                <button class="border-0 btn-transition btn btn-outline-primary" onclick="EditWorkflow(@workflow.workflow_syscode)">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                            </td>
+                            <td style="display:none">@workflow.workflow_syscode</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>

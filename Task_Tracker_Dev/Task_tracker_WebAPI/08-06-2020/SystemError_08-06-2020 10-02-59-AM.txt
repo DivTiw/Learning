@@ -1,0 +1,8 @@
+
+============================================================================================================================================
+Employee SysCode:
+Employee Name:
+Date & Time:08-06-2020 10:02:59.AM
+Action :FileServiceController.DownloadFiles
+Error Message :Response status code does not indicate success: 500 (Internal Server Error).
+============================================================================================================================================

@@ -1,0 +1,128 @@
+﻿@model Task_Tracker_Solution.Areas.Master.Models.GroupViewModel
+@using Task_Tracker_CommonLibrary.Others
+@using Task_Tracker_CommonLibrary.Utility;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Create Group";
+}
+<script>
+    function Confirm(obj) {
+        event.preventDefault();
+        if ($('#txtGrpName').val().length == 0) {
+            bootbox.alert("Please enter Group Name");
+            return;
+        }
+        if ($('#txtAreaGrpDescription').val().length == 0) {
+            bootbox.alert("Please enter Group Description");
+            return;
+        }
+        bootbox.confirm("Please confirm if you want to perform this action?", function (result) {
+            if (result) {
+                $('#btnSaveGroup').click();
+                return true;
+            }
+        });
+    }
+</script>
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-plus icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div> @ViewBag.Title </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("Submit", "Group", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="main-card mb-2 card">
+        <div class="card-body">
+
+            <div class="form-row">
+                <div class="col-md-10">
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail11" class=""><span class="fontred">*</span>Group Name</label>
+                        @Html.TextBoxFor(model=> model.group_name, new { @class = "form-control", @id= "txtGrpName" })
+                    </div>
+                </div>
+                <div class="col-md-2 pl-5">
+                    <div class="position-relative form-group">
+                        <label>Is Active</label>
+                        <br />
+                        @Html.CheckBoxFor(model=> model.is_active)
+                    </div>
+                    
+                </div>
+                <div class="col-md-12">
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail11" class=""><span class="fontred">*</span>Description</label>
+                        @Html.TextAreaFor(model=> model.group_description, new { @id="txtAreaGrpDescription", @class="form-control", @rows="4"})
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail11" class="">Group Head</label>
+                        @Html.ListBoxFor(model => model.arrGrpHeadSyscodes, Model.mslGrpHeads,
+                          new
+                          {
+                              id = "ddlGrpHeads",
+                              @class = "form-control select2",
+                              multiple = "true",
+                              data_placeholder = "Select Group Heads"
+                              //onChange = "CreateTrailJson(this, '" + Enum_Master.ActivityEnum.Added_Member.GetDescription() + "','" + Convert.ToInt32(Enum_Master.ActivityEnum.Added_Member) + "','" + Model.task_syscode + "',emp);"
+                          })
+                        @*<select class="form-control select2" multiple>
+                            <option>aarti mahale</option>
+                            <option>suryakant tripathi</option>
+                            <option>divyanand tiwari</option>
+                            <option>divyanand tiwari</option>
+                            <option>divyanand tiwari</option>
+                            <option>divyanand tiwari</option>
+                            <option>divyanand tiwari</option>
+                            <option>suryakant tripathi</option>
+                        </select>*@                      
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail11" class="">Group Members</label>
+                        @Html.ListBoxFor(model => model.arrMemSyscodes, Model.mslGrpMembers,
+                          new
+                          {
+                              id = "ddlGrpMembers",
+                              @class = "form-control select2",
+                              multiple = "true",
+                              data_placeholder = "Select Group Members"
+                              //onChange = "CreateTrailJson(this, '" + Enum_Master.ActivityEnum.Added_Member.GetDescription() + "','" + Convert.ToInt32(Enum_Master.ActivityEnum.Added_Member) + "','" + Model.task_syscode + "',emp);"
+                          })
+                                     
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="divider m-0"></div>
+            <div class="col-md-12  pl-0">
+                @{
+                    string hideClass = string.Empty;
+                    if (!Model.PageHasWriteAccess)
+                    {
+                        hideClass = "hideMe";
+                    }
+                }
+                <button type="button" class="mt-2 btn btn-primary @hideClass" name="Action" value="save_group" onclick="Confirm(this);">Save</button>
+                <button type="submit" id="btnSaveGroup" class="hideMe mt-2 btn btn-primary @hideClass" name="Action" value="" >Save Group</button>
+            </div>
+        </div>
+        <div style="display:none">
+            @Html.HiddenFor(x=> x.group_syscode, new { id="hidGroup_Syscode"})
+            @Html.HiddenFor(x => x.json_mslEmployeeList, new { id="hidJsonEmployeeList"})
+            @Html.HiddenFor(model => model.PageHasWriteAccess, new { @id = "hid_PageAccess" })
+        </div>
+    </div>   
+}
+
+

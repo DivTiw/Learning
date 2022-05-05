@@ -1,0 +1,13 @@
+﻿@model Task_Tracker_CommonLibrary.DomainModels.SearchDTO
+
+@using (Html.BeginForm(Model.actionName, "Task", new { Area = "Tasks" }, FormMethod.Post, new { id = "SearchControl", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(x=> x.actionName,new { id = "hidActionName"})
+    <div class="search-wrapper active mb-1">
+        <div class="input-holder">
+            <input id="txtSearch" name="txtSearch" type="text" class="search-input" placeholder="Type to search">
+            <button id="btnSearch" class="search-icon"><span></span></button>
+        </div>
+        @*<button class="close"></button>*@
+    </div>
+}

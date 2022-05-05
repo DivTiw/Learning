@@ -1,0 +1,388 @@
+﻿@using System.Configuration;
+@using System.Web.Configuration;
+@using Task_Tracker_CommonLibrary.Entity
+@using Task_Tracker_CommonLibrary.DomainModels
+@{
+    string returnUrl = string.Empty;
+    if (HttpContext.Current.Request.UrlReferrer != null)
+    {
+        var mURL = System.Web.HttpContext.Current.Request.UrlReferrer.ToString();
+        if (!mURL.Contains("/Display/") && !HttpContext.Current.Request.Url.AbsolutePath.Contains("/Edit/"))
+        {
+            HttpContext.Current.Session["ReturnUrl"] = HttpContext.Current.Request.UrlReferrer.ToString();
+        }
+    }
+
+    if (HttpContext.Current.Session["ReturnUrl"] != null && Convert.ToString(HttpContext.Current.Session["ReturnUrl"]) != "")
+    {
+        returnUrl = HttpContext.Current.Session["ReturnUrl"].ToString();
+    }
+
+    List<Menu> menus = new List<Menu>();
+    if (HttpContext.Current.Session["user_syscode"] != null)
+    {
+        if (HttpContext.Current.Session["user_syscode"].ToString() == "9999999")
+        {
+            menus = HttpRuntime.Cache.Get("MenuData1") as List<Menu>;
+        }
+        else
+        {
+            menus = HttpRuntime.Cache.Get("MenuData2") as List<Menu>;
+        }
+    }
+    else
+    {
+        menus = HttpRuntime.Cache.Get("MenuData1") as List<Menu>;
+    }
+
+
+    //menus = HttpRuntime.Cache.Get("MenuData1") as List<Menu>;
+
+
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Language" content="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+    <title>@ViewBag.Title - Task Tracker</title>
+    <meta name="description" content="This project is made for tracking">
+    <link href="~/Content/theme.css" rel="stylesheet" />
+    <link href="~/Content/select2.min.css" rel="stylesheet" />
+  
+
+    @Scripts.Render("~/bundles/jquery")  
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Content/js/bootbox.min.js"></script>
+    <script src="~/Content/js/select2.min.js"></script>
+    <script src="~/Content/js/select2.full.min.js"></script>
+    <script src="~/Content/theme.js"></script>
+    <script src="~/Content/js/jquery-ui.js"></script>
+    <script>
+        var TaskFilterCookieName = "TaskFilterData";
+        function ChangeGroup(obj) {
+            bootbox.confirm("This will refresh the page, are you sure to perform this action?", function (result) {
+                if (result) {
+                    var grpSyscode = obj.value;
+                    $.ajax({
+                        type: "POST",
+                        url: "/TaskTrackerBase/ChangeGroup?selectedGroupSyscode=" + grpSyscode,
+                        contentType: "application/json; charset=utf-8",
+                        success: function (result) {
+                            if (result === "True") {
+                                setCookie(TaskFilterCookieName, "", -1);
+
+                                bootbox.alert("Group changed successfully for the application.");
+                                
+                                location.reload();
+                            }
+                        },
+                        error: function (e) {
+                            alert("Failed to change group. " + e);
+                        }
+                    });
+                } else {
+                    var currentGrpSyscode = $('#hidGroupSyscode').val();
+                    $('#' + obj.id).val(currentGrpSyscode);
+                }
+            });
+        }
+
+        function setCookie(cookieName, cookieValue, nDays) {
+            var today = new Date();
+            var expire = new Date();
+
+            if (!nDays)
+                nDays = 1;
+
+            expire.setTime(today.getTime() + 3600000 * 24 * nDays);
+            document.cookie = cookieName + "=" + escape(cookieValue) + ";expires=" + expire.toString();
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2();
+
+            // Code for Collapse cards function in view task page
+            $(".collapsebtn").click(function () {
+                $("#" + $(this).data("target")).toggle();
+            })
+            // Modal Dialog Drragable code
+            $('.modal-dialog').draggable({
+            });
+
+
+        });
+    </script>
+   
+</head>
+<body>
+    <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
+        <div class="app-header header-shadow">
+            <div class="app-header__logo">
+                <div class="logo-src"></div>
+                <div class="header__pane ml-auto">
+                    <div>
+                        <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="app-header__mobile-menu">
+                <div>
+                    <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
+                        <span class="hamburger-box">
+                            <span class="hamburger-inner"></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="app-header__menu">
+                <span>
+                    <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
+                        <span class="btn-icon-wrapper">
+                            <i class="fa fa-ellipsis-v fa-w-6"></i>
+                        </span>
+                    </button>
+                </span>
+            </div>
+            <div class="app-header__content">
+                @*<div class="app-header-left">
+                        <div class="search-wrapper">
+                            <div class="input-holder">
+                                <input type="text" class="search-input" placeholder="Type to search">
+                                <button class="search-icon"><span></span></button>
+                            </div>
+                            <button class="close"></button>
+                        </div>
+                    </div>*@
+
+                <div class="app-header-right">
+                    <img src="~/Content/images/stride-grey.png" style="width:auto;height:55px" title="a step in progress towards an aim" />
+                    @*<h5 class="project-title">Task Tracker</h5>*@
+                    <div class="project-title"><i>A step in progress towards an aim.</i></div>
+                </div>
+                <div class="app-header-right">
+                    <div class="">
+                        @{ 
+                            SelectList slGroupDDL = (SelectList)Session["GroupDDLSL"];
+                            string selectedGroupVal = slGroupDDL.Where(x => x.Selected).FirstOrDefault()?.Value;
+                        }
+                        @Html.Hidden("hidGroupSyscode", selectedGroupVal)
+                        @Html.DropDownList("Group", slGroupDDL,
+                        new
+                        {
+                            id = "ddlGroup",
+                            onChange = "ChangeGroup(this);",
+                            @class = "group-dropdown"
+                        })
+                    </div>
+                    <div class="header-btn-lg pr-0">
+                        <div class="widget-content p-0">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left">
+                                    <div class="btn-group">
+                                        <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
+                                            <i class="fa fa-user accounticon"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="widget-content-left  ml-1 header-user-info">
+                                    @if (System.Web.HttpContext.Current.Session["user_session"] != null)
+                                    {
+                                        <div class="widget-heading">
+                                            @this.Session["emp_name"]
+                                        </div>
+                                    }
+
+                                </div>
+                                <div class="widget-content-right header-user-info ml-3">
+                                    <a href="/Login/Logout" class="btn-shadow p-1 btn btn-primary btn-sm">
+                                        <i class="fa text-white fa-sign-out-alt pr-1 pl-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="app-main">
+            <div class="app-sidebar sidebar-shadow">
+                <div class="app-header__logo">
+                    <div class="logo-src"></div>
+                    <div class="header__pane ml-auto">
+                        <div>
+                            <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
+                                <span class="hamburger-box">
+                                    <span class="hamburger-inner"></span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="app-header__mobile-menu">
+                    <div>
+                        <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <div class="app-header__menu">
+                    <span>
+                        <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
+                            <span class="btn-icon-wrapper">
+                                <i class="fa fa-ellipsis-v fa-w-6"></i>
+                            </span>
+                        </button>
+                    </span>
+                </div><!--  -->
+                <div class="scrollbar-sidebar">
+                    <!--Left Menu Bar Start-->
+                    <div class="app-sidebar__inner">
+                        <ul class="vertical-nav-menu">
+                            @if (System.Web.HttpContext.Current.Session["user_session"] != null)
+                            {
+                                if (menus != null)
+                                {
+                                    foreach (var mp in menus.Where(p => p.parent_menu_syscode == null))
+                                    {
+
+                                        <li class="app-sidebar__heading">@mp.menu_name</li>
+                                        @RenderMenuItem(menus, mp)
+
+                                    }
+
+                                    @helper RenderMenuItem(List<Menu> menuList, Menu mi)
+                                    {
+int i = 1;
+foreach (var cp in menuList.Where(p => p.parent_menu_syscode == mi.menu_syscode))
+{
+    if (menuList.Count(p => p.parent_menu_syscode == cp.menu_syscode) > 0)
+    {
+            @:
+            <li class="app-sidebar__heading">@cp.menu_name</li>
+    }
+    else
+    {
+            @:
+            <li><a href="@cp.page_url.ToString()"><i class="@cp.icon.ToString()"></i> @cp.menu_name</a></li>
+    }
+    i = i + 1;
+
+        @*if (menuList.Count(p => p.parent_menu_syscode == cp.menu_syscode) > 0)
+            {
+                    @:<ul class="second-sub-menu" role="menu">
+             }
+                        @RenderMenuItem(menuList, cp)
+                        if (menuList.Count(p => p.parent_menu_syscode == cp.menu_syscode) > 0)
+                        {
+                        @:</ul>
+            }*@
+}
+}
+                                }
+                                else
+                                {
+                                    string URL = System.Configuration.ConfigurationManager.AppSettings["eLoginUrl"].ToString();
+                                    Response.Redirect(URL + "&returnValue=Session expired!!! Kindly re-login again.");
+                                }
+                            }
+                        </ul>
+
+                    </div>
+                    <!--Left Menu Bar Ens-->
+                </div>
+
+            </div>
+            <div class="app-main__outer">
+                <div class="text-center p-2">
+                    <span class="text-success" style="font-size:14px">@(string.IsNullOrEmpty(ViewBag.SuccessMessage) ? TempData["SuccessMessage"] : ViewBag.SuccessMessage)</span>
+                    <span class="text-danger" style="font-size:14px">@ViewBag.ErrorMessage</span>
+                </div>
+                <div class="app-main__inner">
+                    @RenderBody()
+                </div>
+                <div class="app-wrapper-footer">
+                    <div class="app-footer">
+                        <div class="app-footer__inner">
+                            <div class="scroll-area-sm">
+                                <div class="scrollbar-container">
+                                    Stride - Designed & Developed By JM Financial IT Team.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+       
+    </div>
+    <div id="dialogRequestedRemarks" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        @Html.Label("Title", new { @id = "insideDialogTitle", @class = "fieldtitle" })
+                    </div>
+                    <button type="button" class="btn btn-sm btn-inverse waves-effect waves-light" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="modal-body">
+                    @Html.Label("Remarks", new { @id = "insideDialogRemarks", @class = "fieldtitle1" })
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dialogReleaseDetails" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        @Html.Label("Title", new { @id = "insideRDDialogTitle", @class = "fieldtitle" })
+                    </div>
+                    <button type="button" class="btn btn-sm btn-inverse waves-effect waves-light" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="modal-body">
+                    <div id = "insideRDDialogContent" ></div>                  
+                </div>
+            </div>
+
+        </div>
+    </div>
+   
+    <div id="dialogSessionExpired" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="modalLabel" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" style="width: 40%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Session Expired!!</h4>
+                </div>
+                <div class="modal-body">
+                    <h4 class="text-danger no-margin" style="font-size:15px !important;font-weight:500;">
+                        Kindly re-login.
+                    </h4>
+                </div>
+                <div class="modal-footer txtaligncenter">
+                    <a class="cancel btn btn-primary btn-flat btn-info-full" href="~/Login/Logout">
+                        <i class="icon mdi mdi-power"></i>&nbsp; Go to Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

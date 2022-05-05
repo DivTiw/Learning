@@ -1,0 +1,740 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F5C14592-597F-41A9-A33B-6511E5B079DB}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Task_Tracker_Solution</RootNamespace>
+    <AssemblyName>Task_Tracker_Solution</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common_Components">
+      <HintPath>..\..\External DLL\Common_Components.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JWT">
+      <HintPath>..\..\External DLL\JWT.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.DependencyCollector, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.0.0\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.0.0\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.0.0\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.0.0\lib\net45\Microsoft.AI.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.WindowsServer, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.0.0\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.0.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\Common\Models\" />
+    <Folder Include="Areas\Common\Views\Shared\" />
+    <Folder Include="Areas\Common\Views\TaskTrackerBase\" />
+    <Folder Include="Areas\Dashboard\Models\" />
+    <Folder Include="Areas\HelpPage\Views\Test\" />
+    <Folder Include="Areas\Reports\Models\" />
+    <Folder Include="Areas\Services\Models\" />
+    <Folder Include="Areas\Services\Views\FileService\" />
+    <Folder Include="Areas\Services\Views\Shared\" />
+    <Folder Include="Content\js\ProjectJS\" />
+    <Folder Include="Models\" />
+    <Folder Include="Views\BaseWeb\" />
+    <Folder Include="Views\Login\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Common\CommonAreaRegistration.cs" />
+    <Compile Include="Areas\Common\Controllers\TaskTrackerBaseController.cs" />
+    <Compile Include="Areas\Dashboard\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Dashboard\DashboardAreaRegistration.cs" />
+    <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
+    <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
+    <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
+    <Compile Include="Areas\HelpPage\HelpPageAreaRegistration.cs" />
+    <Compile Include="Areas\HelpPage\HelpPageConfigurationExtensions.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\CollectionModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ComplexTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\DictionaryModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\EnumTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\EnumValueDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\IModelDocumentationProvider.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\KeyValuePairModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelDescriptionGenerator.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelNameAttribute.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelNameHelper.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterAnnotation.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\SimpleTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\Models\HelpPageApiModel.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleGenerator.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleKey.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\ImageSample.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\InvalidSample.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\ObjectGenerator.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
+    <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Areas\Master\Controllers\CategoryController.cs" />
+    <Compile Include="Areas\Master\Controllers\GroupController.cs" />
+    <Compile Include="Areas\Master\Controllers\ModuleWFLevelMapController.cs" />
+    <Compile Include="Areas\Master\Controllers\ProjectController.cs" />
+    <Compile Include="Areas\Master\Controllers\WorkflowController.cs" />
+    <Compile Include="Areas\Master\MasterAreaRegistration.cs" />
+    <Compile Include="Areas\Master\Models\CategoryViewModel.cs" />
+    <Compile Include="Areas\Master\Models\GroupViewModel.cs" />
+    <Compile Include="Areas\Master\Models\ModuleViewModel.cs" />
+    <Compile Include="Areas\Master\Models\ProjectViewModel.cs" />
+    <Compile Include="Areas\Master\Models\ModuleWFLevelMapViewModel.cs" />
+    <Compile Include="Areas\Master\Models\ReleaseViewModel.cs" />
+    <Compile Include="Areas\Master\Models\WorkflowViewmodel.cs" />
+    <Compile Include="Areas\Master\Controllers\ModuleController.cs" />
+    <Compile Include="Areas\Reports\Controllers\ReportController.cs" />
+    <Compile Include="Areas\Reports\ReportsAreaRegistration.cs" />
+    <Compile Include="Areas\Services\Controllers\FileServiceController.cs" />
+    <Compile Include="Areas\Services\ServicesAreaRegistration.cs" />
+    <Compile Include="Areas\Tasks\Controllers\TaskController.cs" />
+    <Compile Include="Areas\Tasks\Models\TaskViewModel.cs" />
+    <Compile Include="Areas\Tasks\Controllers\ProjectTaskController.cs" />
+    <Compile Include="Areas\Tasks\TasksAreaRegistration.cs" />
+    <Compile Include="Controllers\BaseWebController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\StrideControllerHelpers.cs" />
+    <Compile Include="Utility\StrideHtmlHelper.cs" />
+    <Compile Include="Utility\SubmitButtonSelector.cs" />
+    <Compile Include="Utility\cWebApiNames.cs" />
+    <Compile Include="Utility\StructCommonConstants.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\ValidateTime.txt" />
+    <Content Include="Areas\Dashboard\Views\Dashboard\Dashboard.js" />
+    <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Areas\Master\Views\Workflow\WorkflowJS.js" />
+    <Content Include="Areas\Tasks\Views\JS\TaskStartStop.js" />
+    <Content Include="Areas\Tasks\Views\JS\TaskTreeView.js" />
+    <Content Include="Content\bootstrap-treeview.css" />
+    <Content Include="Content\bootstrap-treeview.js" />
+    <Content Include="Content\Chart.css" />
+    <Content Include="Content\Chart.min.css" />
+    <Content Include="Content\FilterJS\Filter.css" />
+    <Content Include="Content\FilterJS\Filter.js" />
+    <Content Include="Content\images\idea-off.png" />
+    <Content Include="Content\images\idea-on.png" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\fonts\AD.svg" />
+    <Content Include="Content\fonts\AE.svg" />
+    <Content Include="Content\fonts\AF.svg" />
+    <Content Include="Content\fonts\AG.svg" />
+    <Content Include="Content\fonts\AI.svg" />
+    <Content Include="Content\fonts\AL.svg" />
+    <Content Include="Content\fonts\AM.svg" />
+    <Content Include="Content\fonts\AO.svg" />
+    <Content Include="Content\fonts\AR.svg" />
+    <Content Include="Content\fonts\AS.svg" />
+    <Content Include="Content\fonts\AT.svg" />
+    <Content Include="Content\fonts\AU.svg" />
+    <Content Include="Content\fonts\AW.svg" />
+    <Content Include="Content\fonts\AX.svg" />
+    <Content Include="Content\fonts\AZ.svg" />
+    <Content Include="Content\fonts\BA.svg" />
+    <Content Include="Content\fonts\BB.svg" />
+    <Content Include="Content\fonts\BD.svg" />
+    <Content Include="Content\fonts\BE.svg" />
+    <Content Include="Content\fonts\BF.svg" />
+    <Content Include="Content\fonts\BG.svg" />
+    <Content Include="Content\fonts\BH.svg" />
+    <Content Include="Content\fonts\BI.svg" />
+    <Content Include="Content\fonts\BJ.svg" />
+    <Content Include="Content\fonts\BL.svg" />
+    <Content Include="Content\fonts\BM.svg" />
+    <Content Include="Content\fonts\BN.svg" />
+    <Content Include="Content\fonts\BO.svg" />
+    <Content Include="Content\fonts\BR.svg" />
+    <Content Include="Content\fonts\BS.svg" />
+    <Content Include="Content\fonts\BT.svg" />
+    <Content Include="Content\fonts\BV.svg" />
+    <Content Include="Content\fonts\BW.svg" />
+    <Content Include="Content\fonts\BY.svg" />
+    <Content Include="Content\fonts\BZ.svg" />
+    <Content Include="Content\fonts\CA.svg" />
+    <Content Include="Content\fonts\CC.svg" />
+    <Content Include="Content\fonts\CD.svg" />
+    <Content Include="Content\fonts\CF.svg" />
+    <Content Include="Content\fonts\CG.svg" />
+    <Content Include="Content\fonts\CH.svg" />
+    <Content Include="Content\fonts\CI.svg" />
+    <Content Include="Content\fonts\CK.svg" />
+    <Content Include="Content\fonts\CL.svg" />
+    <Content Include="Content\fonts\CM.svg" />
+    <Content Include="Content\fonts\CN.svg" />
+    <Content Include="Content\fonts\CO.svg" />
+    <Content Include="Content\fonts\CR.svg" />
+    <Content Include="Content\fonts\CU.svg" />
+    <Content Include="Content\fonts\CV.svg" />
+    <Content Include="Content\fonts\CW.svg" />
+    <Content Include="Content\fonts\CX.svg" />
+    <Content Include="Content\fonts\CY.svg" />
+    <Content Include="Content\fonts\CZ.svg" />
+    <Content Include="Content\fonts\DE.svg" />
+    <Content Include="Content\fonts\DJ.svg" />
+    <Content Include="Content\fonts\DK.svg" />
+    <Content Include="Content\fonts\DM.svg" />
+    <Content Include="Content\fonts\DO.svg" />
+    <Content Include="Content\fonts\DZ.svg" />
+    <Content Include="Content\fonts\EC.svg" />
+    <Content Include="Content\fonts\EE.svg" />
+    <Content Include="Content\fonts\EG.svg" />
+    <Content Include="Content\fonts\ER.svg" />
+    <Content Include="Content\fonts\ES.svg" />
+    <Content Include="Content\fonts\ET.svg" />
+    <Content Include="Content\fonts\EU.svg" />
+    <Content Include="Content\fonts\fa-solid-900.svg" />
+    <Content Include="Content\fonts\FI.svg" />
+    <Content Include="Content\fonts\FJ.svg" />
+    <Content Include="Content\fonts\FK.svg" />
+    <Content Include="Content\fonts\FM.svg" />
+    <Content Include="Content\fonts\FO.svg" />
+    <Content Include="Content\fonts\FR.svg" />
+    <Content Include="Content\fonts\GA.svg" />
+    <Content Include="Content\fonts\GB-ENG.svg" />
+    <Content Include="Content\fonts\GB-NIR.svg" />
+    <Content Include="Content\fonts\GB-SCT.svg" />
+    <Content Include="Content\fonts\GB-WLS.svg" />
+    <Content Include="Content\fonts\GB-ZET.svg" />
+    <Content Include="Content\fonts\GB.svg" />
+    <Content Include="Content\fonts\GD.svg" />
+    <Content Include="Content\fonts\GE.svg" />
+    <Content Include="Content\fonts\GF.svg" />
+    <Content Include="Content\fonts\GG.svg" />
+    <Content Include="Content\fonts\GH.svg" />
+    <Content Include="Content\fonts\GI.svg" />
+    <Content Include="Content\fonts\GL.svg" />
+    <Content Include="Content\fonts\GM.svg" />
+    <Content Include="Content\fonts\GN.svg" />
+    <Content Include="Content\fonts\GP.svg" />
+    <Content Include="Content\fonts\GQ.svg" />
+    <Content Include="Content\fonts\GR.svg" />
+    <Content Include="Content\fonts\GS.svg" />
+    <Content Include="Content\fonts\GT.svg" />
+    <Content Include="Content\fonts\GU.svg" />
+    <Content Include="Content\fonts\GW.svg" />
+    <Content Include="Content\fonts\GY.svg" />
+    <Content Include="Content\fonts\HK.svg" />
+    <Content Include="Content\fonts\HM.svg" />
+    <Content Include="Content\fonts\HN.svg" />
+    <Content Include="Content\fonts\HR.svg" />
+    <Content Include="Content\fonts\HT.svg" />
+    <Content Include="Content\fonts\HU.svg" />
+    <Content Include="Content\fonts\ID.svg" />
+    <Content Include="Content\fonts\IE.svg" />
+    <Content Include="Content\fonts\IL.svg" />
+    <Content Include="Content\fonts\IM.svg" />
+    <Content Include="Content\fonts\IN.svg" />
+    <Content Include="Content\fonts\IO.svg" />
+    <Content Include="Content\fonts\ionicons.svg" />
+    <Content Include="Content\fonts\IQ.svg" />
+    <Content Include="Content\fonts\IR.svg" />
+    <Content Include="Content\fonts\IS.svg" />
+    <Content Include="Content\fonts\IT.svg" />
+    <Content Include="Content\fonts\JE.svg" />
+    <Content Include="Content\fonts\JM.svg" />
+    <Content Include="Content\fonts\JO.svg" />
+    <Content Include="Content\fonts\JP.svg" />
+    <Content Include="Content\fonts\KE.svg" />
+    <Content Include="Content\fonts\KG.svg" />
+    <Content Include="Content\fonts\KH.svg" />
+    <Content Include="Content\fonts\KI.svg" />
+    <Content Include="Content\fonts\KM.svg" />
+    <Content Include="Content\fonts\KN.svg" />
+    <Content Include="Content\fonts\KP.svg" />
+    <Content Include="Content\fonts\KR.svg" />
+    <Content Include="Content\fonts\KW.svg" />
+    <Content Include="Content\fonts\KY.svg" />
+    <Content Include="Content\fonts\KZ.svg" />
+    <Content Include="Content\fonts\LA.svg" />
+    <Content Include="Content\fonts\LB.svg" />
+    <Content Include="Content\fonts\LC.svg" />
+    <Content Include="Content\fonts\LGBT.svg" />
+    <Content Include="Content\fonts\LI.svg" />
+    <Content Include="Content\fonts\LK.svg" />
+    <Content Include="Content\fonts\LR.svg" />
+    <Content Include="Content\fonts\LS.svg" />
+    <Content Include="Content\fonts\LT.svg" />
+    <Content Include="Content\fonts\LU.svg" />
+    <Content Include="Content\fonts\LV.svg" />
+    <Content Include="Content\fonts\LY.svg" />
+    <Content Include="Content\fonts\MA.svg" />
+    <Content Include="Content\fonts\MC.svg" />
+    <Content Include="Content\fonts\MD.svg" />
+    <Content Include="Content\fonts\ME.svg" />
+    <Content Include="Content\fonts\MF.svg" />
+    <Content Include="Content\fonts\MG.svg" />
+    <Content Include="Content\fonts\MH.svg" />
+    <Content Include="Content\fonts\MK.svg" />
+    <Content Include="Content\fonts\ML.svg" />
+    <Content Include="Content\fonts\MM.svg" />
+    <Content Include="Content\fonts\MN.svg" />
+    <Content Include="Content\fonts\MO.svg" />
+    <Content Include="Content\fonts\MP.svg" />
+    <Content Include="Content\fonts\MQ.svg" />
+    <Content Include="Content\fonts\MR.svg" />
+    <Content Include="Content\fonts\MS.svg" />
+    <Content Include="Content\fonts\MT.svg" />
+    <Content Include="Content\fonts\MU.svg" />
+    <Content Include="Content\fonts\MV.svg" />
+    <Content Include="Content\fonts\MW.svg" />
+    <Content Include="Content\fonts\MX.svg" />
+    <Content Include="Content\fonts\MY.svg" />
+    <Content Include="Content\fonts\MZ.svg" />
+    <Content Include="Content\fonts\NA.svg" />
+    <Content Include="Content\fonts\NC.svg" />
+    <Content Include="Content\fonts\NE.svg" />
+    <Content Include="Content\fonts\NF.svg" />
+    <Content Include="Content\fonts\NG.svg" />
+    <Content Include="Content\fonts\NI.svg" />
+    <Content Include="Content\fonts\NL.svg" />
+    <Content Include="Content\fonts\NO.svg" />
+    <Content Include="Content\fonts\NP.svg" />
+    <Content Include="Content\fonts\NR.svg" />
+    <Content Include="Content\fonts\NU.svg" />
+    <Content Include="Content\fonts\NZ.svg" />
+    <Content Include="Content\fonts\OM.svg" />
+    <Content Include="Content\fonts\PA.svg" />
+    <Content Include="Content\fonts\PE.svg" />
+    <Content Include="Content\fonts\PF.svg" />
+    <Content Include="Content\fonts\PG.svg" />
+    <Content Include="Content\fonts\PH.svg" />
+    <Content Include="Content\fonts\PK.svg" />
+    <Content Include="Content\fonts\PL.svg" />
+    <Content Include="Content\fonts\PM.svg" />
+    <Content Include="Content\fonts\PN.svg" />
+    <Content Include="Content\fonts\PR.svg" />
+    <Content Include="Content\fonts\PS.svg" />
+    <Content Include="Content\fonts\PT.svg" />
+    <Content Include="Content\fonts\PW.svg" />
+    <Content Include="Content\fonts\PY.svg" />
+    <Content Include="Content\fonts\QA.svg" />
+    <Content Include="Content\fonts\RE.svg" />
+    <Content Include="Content\fonts\RO.svg" />
+    <Content Include="Content\fonts\RS.svg" />
+    <Content Include="Content\fonts\RU.svg" />
+    <Content Include="Content\fonts\RW.svg" />
+    <Content Include="Content\fonts\SA.svg" />
+    <Content Include="Content\fonts\SB.svg" />
+    <Content Include="Content\fonts\SC.svg" />
+    <Content Include="Content\fonts\SD.svg" />
+    <Content Include="Content\fonts\SE.svg" />
+    <Content Include="Content\fonts\SG.svg" />
+    <Content Include="Content\fonts\SH.svg" />
+    <Content Include="Content\fonts\SI.svg" />
+    <Content Include="Content\fonts\SJ.svg" />
+    <Content Include="Content\fonts\SK.svg" />
+    <Content Include="Content\fonts\SL.svg" />
+    <Content Include="Content\fonts\SM.svg" />
+    <Content Include="Content\fonts\SN.svg" />
+    <Content Include="Content\fonts\SO.svg" />
+    <Content Include="Content\fonts\SR.svg" />
+    <Content Include="Content\fonts\SS.svg" />
+    <Content Include="Content\fonts\ST.svg" />
+    <Content Include="Content\fonts\SV.svg" />
+    <Content Include="Content\fonts\SX.svg" />
+    <Content Include="Content\fonts\SY.svg" />
+    <Content Include="Content\fonts\SZ.svg" />
+    <Content Include="Content\fonts\TC.svg" />
+    <Content Include="Content\fonts\TD.svg" />
+    <Content Include="Content\fonts\TF.svg" />
+    <Content Include="Content\fonts\TG.svg" />
+    <Content Include="Content\fonts\TH.svg" />
+    <Content Include="Content\fonts\TJ.svg" />
+    <Content Include="Content\fonts\TK.svg" />
+    <Content Include="Content\fonts\TL.svg" />
+    <Content Include="Content\fonts\TM.svg" />
+    <Content Include="Content\fonts\TN.svg" />
+    <Content Include="Content\fonts\TO.svg" />
+    <Content Include="Content\fonts\TR.svg" />
+    <Content Include="Content\fonts\TT.svg" />
+    <Content Include="Content\fonts\TV.svg" />
+    <Content Include="Content\fonts\TW.svg" />
+    <Content Include="Content\fonts\TZ.svg" />
+    <Content Include="Content\fonts\UA.svg" />
+    <Content Include="Content\fonts\UG.svg" />
+    <Content Include="Content\fonts\UM.svg" />
+    <Content Include="Content\fonts\US-CA.svg" />
+    <Content Include="Content\fonts\US.svg" />
+    <Content Include="Content\fonts\UY.svg" />
+    <Content Include="Content\fonts\UZ.svg" />
+    <Content Include="Content\fonts\VA.svg" />
+    <Content Include="Content\fonts\VC.svg" />
+    <Content Include="Content\fonts\VE.svg" />
+    <Content Include="Content\fonts\VG.svg" />
+    <Content Include="Content\fonts\VI.svg" />
+    <Content Include="Content\fonts\VN.svg" />
+    <Content Include="Content\fonts\VU.svg" />
+    <Content Include="Content\fonts\WF.svg" />
+    <Content Include="Content\fonts\WS.svg" />
+    <Content Include="Content\fonts\XK.svg" />
+    <Content Include="Content\fonts\YE.svg" />
+    <Content Include="Content\fonts\YT.svg" />
+    <Content Include="Content\fonts\ZA.svg" />
+    <Content Include="Content\fonts\ZM.svg" />
+    <Content Include="Content\fonts\ZW.svg" />
+    <Content Include="Content\images\logo-org.png" />
+    <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\stride-grey.png" />
+    <Content Include="Content\jqgrid\grid-jquery-ui.min.css" />
+    <Content Include="Content\jqgrid\jquery.jqgrid.min.js" />
+    <Content Include="Content\jqgrid\ui.jqgrid.min.css" />
+    <Content Include="Content\jquery-base64-master\jquery.base64.js" />
+    <Content Include="Content\jquery-base64-master\jquery.base64.min.js" />
+    <Content Include="Content\js\bootbox.min.js" />
+    <Content Include="Content\js\bootstrap.min.js" />
+    <Content Include="Content\js\jquery-1.9.1.min.js" />
+    <Content Include="Content\js\jquery-3.2.1.slim.min.js" />
+    <Content Include="Content\js\jquery-ui.js" />
+    <Content Include="Content\js\jquery.min.js" />
+    <Content Include="Areas\Tasks\Views\JS\Task.js" />
+    <Content Include="Areas\Tasks\Views\JS\TaskCommon.js" />
+    <Content Include="Content\js\select2.full.min.js" />
+    <Content Include="Content\js\select2.min.js" />
+    <Content Include="Content\select2.min.css" />
+    <Content Include="Content\theme.css" />
+    <Content Include="Content\theme.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Scripts\ai.0.22.9-build00167.js" />
+    <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Areas\HelpPage\Views\Web.config" />
+    <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\ResourceModel.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\Index.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\TextSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\SimpleTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Samples.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Parameters.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ModelDescriptionLink.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\KeyValuePairModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\InvalidSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ImageSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\HelpPageApiModel.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\EnumTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\DictionaryModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ComplexTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Tasks\Views\web.config" />
+    <Content Include="Areas\Tasks\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Tasks\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\CreateTask.cshtml" />
+    <Content Include="Areas\Master\Views\web.config" />
+    <Content Include="Areas\Master\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Master\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Master\Views\Project\CreateProject.cshtml" />
+    <Content Include="Areas\Master\Views\Workflow\CreateWorkflow.cshtml" />
+    <Content Include="Areas\Master\Views\Workflow\WorkflowList.cshtml" />
+    <Content Include="Areas\Master\Views\Project\MyProjects.cshtml" />
+    <Content Include="Content\jquery-base64-master\README.markdown" />
+    <Content Include="Content\fonts\fa-solid-900.eot" />
+    <Content Include="Content\fonts\fa-solid-900.ttf" />
+    <Content Include="Content\fonts\fa-solid-900.woff" />
+    <Content Include="Content\fonts\fa-solid-900.woff2" />
+    <Content Include="Content\fonts\fa-solid-900d41d.eot" />
+    <Content Include="Content\fonts\ionicons.eot" />
+    <Content Include="Content\fonts\ionicons.ttf" />
+    <Content Include="Content\fonts\ionicons.woff" />
+    <Content Include="Content\fonts\Linearicons-Free.eot" />
+    <Content Include="Content\fonts\Linearicons-Free.ttf" />
+    <Content Include="Content\fonts\Linearicons-Free.woff" />
+    <Content Include="Content\fonts\Linearicons-Free.woff2" />
+    <Content Include="Content\fonts\Pe-icon-7-stroke.eot" />
+    <Content Include="Content\fonts\Pe-icon-7-stroke.ttf" />
+    <Content Include="Content\fonts\Pe-icon-7-stroke.woff" />
+    <Content Include="Areas\Master\Views\ModuleWFLevelMap\ModuleWFLevelMap.cshtml" />
+    <Content Include="Areas\Common\Views\web.config" />
+    <Content Include="Areas\Tasks\Views\Task\MyTasks.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\ViewTask.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\_TaskDetails.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\_TaskEdit.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\_TaskTrail.cshtml" />
+    <Content Include="Areas\Master\Views\Category\Index.cshtml" />
+    <Content Include="Areas\Master\Views\Category\CategoryList.cshtml" />
+    <Content Include="Areas\Master\Views\Category\CreateCategory.cshtml" />
+    <Content Include="Areas\Services\Views\web.config" />
+    <Content Include="Areas\Tasks\Views\Task\_SaveTask.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\CreateSubtask.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\ViewSubtasks.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\MyCreatedTasks.cshtml" />
+    <Content Include="Areas\Dashboard\Views\web.config" />
+    <Content Include="Areas\Dashboard\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Dashboard\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Dashboard\Views\Dashboard\OpenTasks.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\SetWeightage.cshtml" />
+    <Content Include="Areas\Dashboard\Views\Dashboard\Dashboard.cshtml" />
+    <Content Include="Areas\Dashboard\Views\Dashboard\_UserData.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\MyOwnedTasks.cshtml" />
+    <Content Include="Areas\Dashboard\Views\Dashboard\MyTaskActivity.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\_TaskTrailComments.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\_TaskTreeView.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\_TaskHeader.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\_SearchControl.cshtml" />
+    <Content Include="Areas\Master\Views\Group\CreateGroup.cshtml" />
+    <Content Include="Areas\Master\Views\Module\CreateModule.cshtml" />
+    <Content Include="Areas\Master\Views\Module\ProjectModules.cshtml" />
+    <Content Include="Areas\Master\Views\Group\GroupList.cshtml" />
+    <Content Include="Areas\Tasks\Views\ProjectTask\CreateProjectTask.cshtml" />
+    <Content Include="Areas\Dashboard\Views\Dashboard\TeamActivity.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\TaskReport.cshtml" />
+    <Content Include="Areas\Master\Views\Project\ProjectDetails.cshtml" />
+    <Content Include="Areas\Master\Views\Project\ViewProjectDetails.cshtml" />
+    <Content Include="Areas\Tasks\Views\Task\_ReleaseDetails.cshtml" />
+    <Content Include="Areas\Reports\Views\Report\ReleaseReport.cshtml" />
+    <Content Include="Areas\Reports\Views\web.config" />
+    <Content Include="Areas\Reports\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Reports\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Reports\Views\Report\_ReleaseParameters.cshtml" />
+    <None Include="Properties\PublishProfiles\StridePublishProfile.pubxml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Tasks\Views\Shared\_UploadFile.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Task_Tracker_CommonLibrary\Task_Tracker_CommonLibrary.csproj">
+      <Project>{7a1b4a3e-4a5a-4502-838a-4de179b8b174}</Project>
+      <Name>Task_Tracker_CommonLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Project_Readme.html" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>57101</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:57101/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.0\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.0\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

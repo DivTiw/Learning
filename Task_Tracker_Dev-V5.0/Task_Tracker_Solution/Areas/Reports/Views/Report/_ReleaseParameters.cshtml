@@ -1,0 +1,55 @@
+﻿@model Task_Tracker_Solution.Areas.Master.Models.ReleaseViewModel
+
+<div class="main-card mb-3 card">
+    <div class="card-body pt-2">
+        @*<div style="text-align:center">
+            No Records found!
+        </div>*@
+        @if (!(Model == null || Model.lstReleaseDetailsDM == null || Model.lstReleaseDetailsDM.Count <= 0))
+        {
+            <div class="table-responsive filterable">
+
+                <table class="mb-0 table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class='text-center' style='width:10%'>Sr.No</th>
+                            <th>Parameter Name</th>
+                            <th>Parameter Value</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            var cnt = 0;
+
+                            foreach (var item in Model.lstReleaseDetailsDM)
+                            {
+                                cnt = cnt + 1;
+                        <tr>
+                            <td class="text-center">
+                                @cnt
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ParameterMaster.parameter_name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.parameter_value)
+                            </td>
+
+                        </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        
+        }
+        else
+        {
+            <div style="text-align:center">
+                No Records found!
+            </div>
+        }
+    </div>
+</div>
+

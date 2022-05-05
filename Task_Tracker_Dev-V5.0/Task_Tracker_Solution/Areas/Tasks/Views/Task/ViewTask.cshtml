@@ -1,0 +1,164 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_Solution.Areas.Master.Models
+
+@using Task_Tracker_CommonLibrary.Others
+@using Task_Tracker_CommonLibrary.Utility
+@{
+    ViewBag.Title = "ViewTask";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //var emp_name = @Request.RequestContext.HttpContext.Session["emp_name"];
+    var rec = Model.taskUserRecord;
+    var st = Model.taskUserRecord == null ? "" : Model.taskUserRecord.stop_time.ToString();
+}
+
+@section scripts{
+    @Styles.Render("~/bundles/TaskTreeCSS")
+    @Scripts.Render("~/bundles/TaskCommonJS")
+    @Scripts.Render("~/bundles/TaskViewJS")
+}
+<script src="~/Content/jquery-base64-master/jquery.base64.js"></script>
+<script src="~/Content/jquery-base64-master/jquery.base64.min.js"></script>
+
+<script type="text/javascript">
+    //var emp = '';
+    var stopTime;
+    var status = '@(Model?.task_status_syscode)';
+    var isReadOnly = @((!Model?.PageHasWriteAccess).ToString().ToLower()); //Here not is used to invert between write access to read access.
+    var proj_syscode = '@(Model?.project?.project_syscode)';
+    var proj_name = '@(Model?.project?.project_name)';
+    var tskref = '@(Model?.task_reference)';
+    var task_syscode = '@(Model?.task_syscode)';
+
+    $(document).ready(function () {
+        //emp = '@*emp_name*@';
+        stopTime = '@st';
+        userrec = '@rec'
+        var startt = "", stopt = "";
+        startt = CheckTimeNull('@((Model != null ? (Model.taskUserRecord?.start_time == null ? default(DateTime) : Model.taskUserRecord.start_time) : default(DateTime)).Value.ToString("MM/dd/yyyy HH:mm:ss"))');
+        stopt = CheckTimeNull('@((Model != null ? (Model.taskUserRecord?.stop_time == null ? default(DateTime) : Model.taskUserRecord.stop_time) : default(DateTime)).Value.ToString("MM/dd/yyyy HH:mm:ss"))');
+
+        if (startt !== "") {
+            if (stopt !== "") {
+                setHRS(startt, stopt);
+                setElapsedTime();
+            } else {
+                setHRS(startt, new Date());
+                startTime(true);
+            }
+        }
+
+        //var enumJson = JSON.parse($("#hid_ActivityEnum").val());
+        //InitializeTrail(enumJson);
+
+        //alert(stopTime);
+
+        if (userrec == '') {
+            ToggleStartStop(true);
+        }
+        else if (stopt == '') {
+            ToggleStartStop(false);
+        }
+        else {
+            ToggleStartStop(true);
+        }
+
+        if (isReadOnly) {
+            DisableAllButtons(true);
+        }
+    });
+
+    function DisableAllButtons(disable) {
+        if (disable) {
+            DisableAll(disable);
+        } else {
+            DisableAll(disable);
+        }
+    }
+    function DisableAll(disable) {
+        $("#btnSubmit").prop('disabled', disable);
+        DisableStartStop(disable);
+        if(disable) {
+            $("#aSubtask").addClass('disabled').removeAttr("href");
+        }
+    }
+
+    function Validate() {
+        var valCom = $("#txtTrail_Comments").val();
+
+        if(valCom == '' || valCom.length == 0)
+        {
+            bootbox.alert("Please enter task comments.");
+            return false;
+        }
+        else
+        {
+            $(".btn").addClass('disabled');
+            return true;
+        }
+    }
+
+</script>
+
+@if (Model != null)
+{
+    <div class="app-page-title">
+        <div class="page-title-wrapper">
+            @{
+                Html.RenderPartial("_TaskHeader", @Model);
+            }
+        </div>
+
+    </div>
+    @*<div class="text-center">
+            <span style="color:blue;font-weight:bold;font-size:12px">@(string.IsNullOrEmpty(ViewBag.SuccessMessage) ? TempData["SuccessMessage"] : ViewBag.SuccessMessage)</span>
+            <span style="color:red;font-weight:bold;font-size:12px">@ViewBag.ErrorMessage</span>
+        </div>*@
+using (Html.BeginForm("SaveTrail", "Task", new { Area = "Tasks" }, FormMethod.Post, new { id = "ViewTaskForm", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(x => x.task_reference, new { @id = "hidTask_Ref" })
+    @Html.HiddenFor(x => x.task_subject, new { @id = "hidTaskSubject" })
+    @Html.HiddenFor(x => x.PageHasWriteAccess, new { @id = "hidPageHasWriteAccess" })
+    
+    <div class="row">
+        <div class="col-sm-6">
+
+            @{
+                Html.RenderPartial("_TaskDetails", @Model);
+            }
+
+        </div>
+        <div class="col-sm-6">
+            @{
+                Html.RenderPartial("_TaskTreeView", @Model);
+            }
+        </div>
+
+        <div class="col-sm-12 col-lg-6">
+            @{
+                Html.RenderPartial("_TaskEdit", @Model);
+            }
+        </div>
+        <div class="col-sm-12 col-lg-6">
+            @{
+                Html.RenderPartial("_TaskTrail", @Model);
+            }
+        </div>
+        <div class="col-sm-12">
+
+            @{
+                Html.RenderPartial("_TaskTrailComments", @Model);
+            }
+
+        </div>
+        @Html.HiddenFor(model => model.task_syscode, new { @id = "hid_task_syscode" })
+    </div>
+                    }
+                }
+
+
+@*<div id="abc">
+    
+        <label>Hi ABC</label>
+    <input type="text" />
+</div>*@
+

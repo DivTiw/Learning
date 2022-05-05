@@ -1,0 +1,55 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Newtonsoft.Json
+@{
+    var taskTreeData = Model.lstTaskTrees;
+}
+<script type="text/javascript">
+    var taskTreeJson = '@Html.Raw(JsonConvert.SerializeObject(taskTreeData))';
+</script>
+<style>
+    .treesrh.btn {
+        font-size: 1.3rem;
+        margin-top: -6px;
+        font-weight: 700 !important;
+        padding: 3px 13px;
+    }
+  
+</style>
+<div class="main-card mb-3 card">
+    <div class="card-header">
+        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+            <i class="header-icon pe-7s-folder"> </i>Task Tree View
+        </div>
+
+        <div class="btn-actions-pane-right text-capitalize">
+                <button type="button" title="expand" class="btn-icon btn-icon-only btn collapsebtn"  data-target="collapseTree">
+                    <i class="pe-7s-expand1 btn-icon-wrapper"></i>
+                </button>
+                @*<button type="button" title="sync" class="btn-icon btn-icon-only btn btn-link">
+                <i class="pe-7s-refresh-2 btn-icon-wrapper"></i>
+            </button>*@
+</div>
+    </div>
+    <div id="collapseTree">
+    <div class="card-body pt-1 pl-0 pr-0">
+
+        <div class="scroll-area-md tasktrailarea">
+            <div class="scrollbar-container ps--active-y ps">
+                <div class="col-md-12">
+
+                    <input type="text" class="form-control d-inline-block" id="input-search" placeholder="Type to search..." style="width:75%">
+                    <button type="button" class="treesrh btn btn-info d-inline-block" id="btn-search"><i class="pe-7s-search"></i></button>
+                    <button type="button" class="treesrh btn btn-default d-inline-block" id="btn-clear-search"><i class="pe-7s-close"></i></button>
+                    <!-- </form> -->
+                    <div class="mt-2 mb-2" style="height:239px;overflow-y:auto;margin-right: 15px;">
+                        <div id="tasktree"></div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>

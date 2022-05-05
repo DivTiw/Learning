@@ -1,0 +1,168 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_Solution.Utility
+@using Task_Tracker_CommonLibrary.Utility
+
+<style>
+    .actionbtn {
+        padding: 0.15rem .45rem .3rem;
+    }
+
+        .actionbtn i {
+            color: #fff;
+            font-size: 12px;
+            vertical-align: initial;
+        }
+</style>
+
+<div class="main-card mb-3 card">
+    <div class="card-header-tab card-header refheader">
+        <div class="card-header-title text-capitalize taskdetailsheader">
+            <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                <i class="header-icon pe-7s-note2 icon-gradient bg-premium-dark"> </i> Task
+            </div>
+        </div>
+        <div class="btn-actions-pane-right text-capitalize">
+           
+            @if (@Model.priority != null)
+            {
+                <i class="@Model.priority.priority_icon" title="@Model.priority.priority_name"></i>
+            }
+            <div class="@Model.status.status_icon ml-2 mr-2">
+                @Model.status.status_name
+            </div>
+
+            <a id="aSubtask" class="border-0 btn-transition btn btn-primary actionbtn" href="@Url.Action("CreateSubtask", "Task", new { id = @Model.task_syscode.ToString().Base64Encode()})">
+                <i class="fa fa-plus" style="color:#fff"></i> Sub Task
+            </a>
+            @if (Model != null && Model.module_syscode != null && Model.module_syscode > 0)
+            {
+            <a id="aReleases" title="View Releases" href="@Url.Action("ReleaseReport", "Report", new { area = "Reports", id = @Model.task_syscode.ToString().Base64Encode() })">
+                <i class="pe-7s-rocket ml-2" style="font-size: 28px;"></i>
+            </a>
+            }
+            <button type="button" title="expand" class="btn-icon btn-icon-only btn collapsebtn" data-target="taskviewcollapse">
+                <i class="pe-7s-expand1 btn-icon-wrapper"></i>
+            </button>
+        </div>
+    </div>
+    <div id="taskviewcollapse">
+        <div class="card-body pt-1">
+            <div class="scroll-area-md tasktrailarea">
+                <div class="scrollbar-container ps--active-y ps">
+                    <div class="form-row">
+                        @Html.HiddenFor(x => x.module_syscode, new object { })
+                        <div class="col-md-12">
+                            <div class="position-relative form-group mb-1">
+                                <label for="exampleEmail11" class="">Subject:</label>
+                                <span style='white-space:pre-wrap;'>@Model.task_subject</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="position-relative form-group mb-1">
+                                <label for="exampleEmail11" class="">Details: </label>
+                                <span style='white-space:pre-wrap;'>@Model.task_details</span>
+                            </div>
+                        </div>
+                        @if (Model.module != null && Model.module_syscode != null && Model.module_syscode > 0)
+                        {
+                            <div class="col-md-12">
+                                <div class="position-relative form-group mb-1">
+                                    <label for="exampleEmail11" class="">Project: </label>
+                                    <label>
+                                        <a title="View" href="@Url.Action("EditProject", "Project", new { Area = "Master", id = @Model.project?.project_syscode.ToString().Base64Encode()})">
+                                            @(Model.project?.project_name)
+                                        </a>
+                                        &nbsp; |  &nbsp; 
+                                        <a title="View Project Paramter Details" target="_blank" href="@Url.Action("ViewProjectDetails", "Project", new { Area = "Master", id = @Model.project?.project_syscode.ToString().Base64Encode(), projname = @Model.project?.project_name})">
+                                            <i class="pe-7s-folder" style="font-size:20px;vertical-align: bottom;"></i>
+                                        </a>
+
+                                    </label>
+                                </div>
+                            </div>
+                            @*<div class="col-md-4">
+                                <div class="position-relative form-group mb-1">                                   
+                                    <label>
+                                        <a title="View Project Paramter Details" target="_blank" href="@Url.Action("ViewProjectDetails", "Project", new { Area = "Master", id = @Model.project?.project_syscode.ToString().Base64Encode(), projname = @Model.project?.project_name})">
+                                           Project Details
+                                        </a>
+                                    </label>
+                                </div>
+                            </div>*@
+                            <div class="col-md-12">
+                                <div class="position-relative form-group mb-1">
+                                    <label for="exampleEmail11" class="">Module: </label>
+                                    <label class="">
+                                        <a title="View" href="@Url.Action("EditModule", "Module", new { Area = "Master", id = @Model.module?.module_syscode.ToString().Base64Encode(), projname = @Model.project?.project_name })">
+                                            @(Model.module?.module_name)
+                                        </a>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="position-relative form-group mb-1">
+                                    <label for="exampleEmail11" class="">Workflow: </label>
+                                    <label>@Model.workflow_name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="position-relative form-group mb-1">
+                                    <label for="exampleEmail11" class="">Workflow Level: </label>
+                                    <label class=""> @Model.level_name</label>
+                                </div>
+                            </div>
+                        }
+                        <div class="col-md-6">
+                            <div class="position-relative form-group mb-1">
+                                <label for="exampleEmail11" class="">Owner: </label>
+                                <label>@Model.owner</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="position-relative form-group mb-1">
+                                <label for="exampleEmail11" class="">On Behalf of: </label>
+                                <label class="">@Model.onBehalf</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="position-relative form-group mb-1">
+                                <label for="exampleEmail11" class="">Category: </label>
+                                <label class="">@(Model.category?.category_name)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="position-relative form-group mb-1">
+                                <label for="exampleEmail11" class="">Target Date:</label>
+                                <label class="">@Html.DisplayFor(model => model.target_date)</label>
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="position-relative form-group mb-1">
+                                <label for="exampleEmail11" class="">Members: </label>
+                                <label class="">@Model.members</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="position-relative form-group mb-1">
+                                <label for="exampleEmail11" class="">Attachments: </label>
+                                <label class=""> @Html.FileLinkFor(Model.lstAttachments)</label>
+                                @*<ul class="p-0 attachmentul">
+                                        @foreach (var attachment in Model.lstAttachments)
+                                        {
+                                            <li>
+                                                <a href="@cWebApiNames.AppDownloadAttachments?AttachGuid=@attachment.attachment_identifier&MFileId=@attachment.mongo_file_id&FileName=@attachment.attachment_filename">
+                                                    <i class="fa fa-paperclip btn-icon-wrapper"></i> @attachment.attachment_filename
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

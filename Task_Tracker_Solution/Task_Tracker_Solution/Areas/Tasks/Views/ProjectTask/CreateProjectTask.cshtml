@@ -1,0 +1,238 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_CommonLibrary.Utility
+@using Task_Tracker_CommonLibrary.Others
+@{
+    ViewBag.Title = "CreateProjectTask";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    @Scripts.Render("~/bundles/taskCommonJS")
+}
+
+<script>
+    $(document).ready(function () {
+        var IsTaskForUpdate = '@(Model.task_syscode > 0)';//$("#hid_module_cnt").val();
+        if (IsTaskForUpdate === 'True') {
+            $("tr.TRLevel td input").prop('disabled', true);
+            $("tr.TRLevel td select").prop('disabled', true); 
+            $("tr.TRLevel td textarea").prop('disabled', true);
+        } else {
+            $("tr.TRLevel td input").prop('disabled', false);
+            $("tr.TRLevel td select").prop('disabled', false);
+            $("tr.TRLevel td textarea").prop('disabled', false);
+        }
+        calculateTotalWtg();
+        $('#cbTodo').change(function () {
+            if (this.checked) {
+                $('.cbInitiate').removeAttr('checked');
+                $('.cbInitiate').prop('disabled', true);
+            }
+            else {
+                $('.cbInitiate').prop('disabled', false);
+            }
+
+        });
+    });
+</script>
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-note2 icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div>Create Project Task </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="main-card mb-1 card">
+            <div class="card-body pt-2 pb-1">
+                @{
+                    Html.RenderPartial("~/Areas/Tasks/Views/Task/_SearchControl.cshtml", Model.searchDTO);
+                }
+            </div>
+        </div>
+        @using (Html.BeginForm("SaveProjectTask", "ProjectTask", new { Area = "Tasks" }, FormMethod.Post, new { id = "SaveProjectTaskForm", enctype = "multipart/form-data" }))
+        {
+            @*@Html.HiddenFor(model => @Model.Operation, new { value = Enum_Master.TaskOperationState.Creation })*@
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="col-md-6 position-relative form-group">
+                            <label>Mark as ToDo:</label>
+                            @Html.CheckBoxFor(model => Model.isToDoTask, new { id = "cbTodo" })
+                        </div>
+                        <div class="col-md-6">
+                            <div class="position-relative form-group">
+                                <label>Create Level Tasks:</label>
+                                @{
+                                    object obj = new object();
+                                    if (!Model.blnCreateLevelTasks)
+                                    {
+                                        obj = new { disabled = "disabled" };
+                                    }
+                                    @Html.CheckBoxFor(model => Model.blnCreateLevelTasks, obj)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    @{
+                        Html.RenderPartial("~/Areas/Tasks/Views/Task/_SaveTask.cshtml", @Model);
+                    }
+
+                </div>
+                @if (!(Model == null || Model.module_syscode == null || Model.module_syscode <= 0))
+                {
+                    var strDisable = Model.task_syscode > 0 ? "disable" : "";
+                    var saveButtonName = Model.task_syscode > 0 ? "Update" : "Create";
+
+                    @Html.HiddenFor(model => @Model.searchDTO.project_syscode)
+                    @Html.HiddenFor(model => @Model.searchDTO.category_syscode)
+                    @Html.HiddenFor(model => @Model.searchDTO.module_syscode)
+
+                    @Html.HiddenFor(model => @Model.task_syscode)
+                    @Html.HiddenFor(model => @Model.module_syscode)
+                    <div class="card-body pt-2">
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <label for="exampleEmail11" class="mt-1 mb-1">Module Description:</label>
+                                @Html.DisplayFor(model => model.module.module_description)
+                            </div>
+                        </div>
+
+                        <table class="mb-0 table table-bordered mytasktbl">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Sr. No</th>
+                                    <th>Workflow Level</th>
+                                    <th style="width:30%">Details</th>
+                                    <th style="width:25%">Users</th>
+                                    <th style="width:12%">Weightage</th>
+                                    <th>Target Date</th>
+                                    <th>Initiate</th>
+                                </tr>
+
+                            </thead>
+                            @if (!(Model.workflowLevels == null || Model.workflowLevels.lstLevelTaskUsers == null || Model.workflowLevels.lstLevelTaskUsers.Count <= 0))
+                            {
+                                <tbody>
+                                    @{
+                                        var row = 0;
+                                        for (var i = 0; i < Model.workflowLevels.lstLevelTaskUsers.Count(); i++)
+                                        {
+                                            row = row + 1;
+                                            var col = 0;
+                                            string strIdPart = "WFLevelTable_Row" + row + "_Col";
+                                            <tr id=@("WFLevelTable_Row" + row) class="TRLevel">
+                                                <td class="text-center" id=@(strIdPart + ++col)>
+                                                    @row
+                                                    @Html.HiddenFor(model => @Model.workflowLevels.lstLevelTaskUsers[i].level_syscode)
+                                                    @Html.HiddenFor(model => @Model.workflowLevels.lstLevelTaskUsers[i].details_syscode)
+                                                    @Html.HiddenFor(model => @Model.workflowLevels.lstLevelTaskUsers[i].level_name)
+                                                    @Html.HiddenFor(model => @Model.workflowLevels.lstLevelTaskUsers[i].task_syscode)
+                                                </td>
+                                                <td id=@(strIdPart + ++col)>
+                                                    @Html.DisplayFor(model => @Model.workflowLevels.lstLevelTaskUsers[i].level_name, new { @class = "form-control" })
+                                                </td>
+                                                <td id=@(strIdPart + ++col)>
+                                                    @Html.TextAreaFor(model => @Model.workflowLevels.lstLevelTaskUsers[i].level_details,
+                                                        new
+                                                        {
+                                                            @class = "form-control"
+                                                        })
+                                                </td>
+                                                <td id=@(strIdPart + ++col)>
+                                                    @Html.DropDownListFor(model => @Model.workflowLevels.lstLevelTaskUsers[i].arrUserSyscodes, new MultiSelectList(Model.ddlData.Data.ExtractDDLDataForKey(DBTableNameEnums.GroupMember), "Value", "Text", @Model.workflowLevels.lstLevelTaskUsers[i].arrUserSyscodes),
+                                                         new
+                                                         {
+                                                             id = strIdPart + col + "_ddlUserList",
+                                                             @class = "form-control select2",
+                                                             multiple = "true",
+                                                             data_placeholder = "Select Users",
+                                                         })
+                                                </td>
+                                                <td id=@(strIdPart + ++col)>
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(model => @Model.workflowLevels.lstLevelTaskUsers[i].weightage,
+                                                            new
+                                                            {
+                                                                @Value = (@Model.workflowLevels.lstLevelTaskUsers[i].weightage == null) ? "0" : @Model.workflowLevels.lstLevelTaskUsers[i].weightage.ToString(),
+                                                                @class = "form-control ChkPercent",
+                                                                @id = strIdPart + col + "_txtweightage",
+                                                                @type = "number",
+                                                                @min = "0",
+                                                            })
+                                                        <div class="input-group-append">
+                                                            <div class="input-group-text">
+                                                                <i class="fa fa-percent"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(model => model.workflowLevels.lstLevelTaskUsers[i].target_date, new { @class = "form-control", @id = "txttargetDate", data_toggle = "datepicker", autocomplete = "off" })
+                                                        <div class="input-group-append">
+                                                            <div class="input-group-text">
+                                                                <i class="fa fa-calendar-alt"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td id=@(strIdPart + ++col) class="text-center">
+                                                    @Html.CheckBoxFor(model => Model.workflowLevels.lstLevelTaskUsers[i].initiate,
+                                                                        new
+                                                                        {
+                                                                            @class = "cbInitiate",
+                                                                            id = "cbInitiate"
+                                                                        })
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td style="text-align:right">Total Weightage (%)</td>
+                                        <td><label id="lblTotalWtg"></label></td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                </tfoot>
+                                        }
+                                        else
+                                        {
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="13" style="text-align:center">
+                                                        No Records found!
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        }
+                        </table>
+                        <div class="divider m-0"></div>
+                        @*<button class="mt-2 btn btn-primary"><i class="fa fa-file btn-icon-wrapper"></i> &nbsp;Create</button>*@
+                        @{
+                            string hideClass = string.Empty;
+                            if (!Model.PageHasWriteAccess)
+                            {
+                                hideClass = "hideMe";
+                            }
+                        }
+                        <button type="submit" class="@hideClass mt-2 btn btn-primary" id="btn_createTask" onclick="confirmSave(this)"><i class="fa fa-file btn-icon-wrapper"></i> &nbsp;@saveButtonName</button>
+
+                    </div>
+                                        }
+            </div>
+                                        }
+    </div>
+
+</div>

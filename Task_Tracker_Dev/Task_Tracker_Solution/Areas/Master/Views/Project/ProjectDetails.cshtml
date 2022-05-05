@@ -1,0 +1,285 @@
+﻿@model Task_Tracker_Solution.Areas.Master.Models.ProjectViewModel
+@using Newtonsoft.Json;
+@using Task_Tracker_Solution.Utility
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "ProjectDetails";
+}
+<script type="text/javascript">
+
+    var ProjDetailsJson;
+    var lstParam;
+    //var dd = '<select><option>First Option</option><option>Second Option</option></select>';
+
+    $(document).ready(function () {
+
+        var hidDetailList = $("#hid_ProjDetailsJson").val();
+
+        if (hidDetailList === "" || hidDetailList === "[]" || hidDetailList === null) {
+            ProjDetailsJson = [{
+                row_Id: "1",
+                details_syscode: "0",
+                env_syscode: "0",
+                project_syscode: "0",
+                parameter_syscode: "0",
+                parameter_name: "",
+                parameter_value: "",
+                is_active: "true",
+                is_deleted: "false"
+            }];
+        } else {
+            ProjDetailsJson = JSON.parse(hidDetailList);
+        }
+    });
+
+    function AddRow() {
+        var rowCount = 0;
+        rowCount = ProjDetailsJson.length + 1;
+        ProjDetailsJson.push({
+            row_Id: rowCount,
+            details_syscode: "0",
+            env_syscode: "0",
+            project_syscode: "0",
+            parameter_syscode: "0",
+            parameter_name: "",
+            parameter_value: "",
+            is_active: "true",
+            is_deleted: "false"
+        });
+        $('#StepsTable').append(returnWFTableRow(rowCount));
+        var strIdPart = "ParamRow" + rowCount + "_Col2";
+        $('.' + strIdPart + '_select2').select2(); // Very imp for select list to open on add row
+    }
+
+
+    function ddlEnvChange() {
+        //alert(id);
+        try {
+            var env_syscode = $('#ddlEnv option:selected').val(); 
+            if (env_syscode == 0) {
+                bootbox.alert("Please select Enironment");
+                return;
+            }
+            
+            $("#hid_env_syscode").val(env_syscode);
+            var form = $('#frmProjDetailsFetch');
+            form.submit();
+
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+
+
+    function returnWFTableRow(rowCount) {
+        var colCounter = 0;
+        var strIdPart = "ParamRow" + rowCount + "_Col";
+        var strTableRow = '<tr id="ParamRow_"' + rowCount + '>' +
+                                '<td id="' + strIdPart + colCounter++ + '" class="text-center">' + rowCount + '</td>' +
+                                '<td id="' + strIdPart + ++colCounter + '">' + $("#divHiddenDD").html().replace('#id#', strIdPart + colCounter).replace('#id#', strIdPart + colCounter).replace('#id#', strIdPart + colCounter).replace('#id#', strIdPart + colCounter).replace('#id#', strIdPart + colCounter).replace('#id#', strIdPart + colCounter).replace('#id#', strIdPart + colCounter).replace('#id#', strIdPart + colCounter).replace('#id#', strIdPart + colCounter) + '</td>' +
+                                '<td id="' + strIdPart + ++colCounter + '"><input id="' + strIdPart + colCounter + '_param_value" class="form-control" type="text" /></td>' +
+                                '<td id="' + strIdPart + ++colCounter + '" class="text-center">' +
+                                    '<button id="' + strIdPart + colCounter + '_btnAdd" type="button" class="border-0 btn-transition btn btn-outline-primary" onclick="AddRow();"><i class="fa fa-plus"></i></button>' +
+                                    '<input id="' + strIdPart + colCounter + '_details_syscode" name="' + strIdPart + colCounter + '_details_syscode" type="hidden" value="0">' +
+                                 '</td>' +
+                           '</tr>';
+        return strTableRow;
+    }
+
+    function Save(obj) {
+
+        var SaveProjDetailsJson = [];
+
+        var intProjectSyscode = $("#hid_project_syscodeFetch").val();
+        var intEnvSyscode = $("#hid_env_syscode").val();
+
+        if (intProjectSyscode == 0) {
+            bootbox.alert("Please select Project.");
+            return;
+        }
+
+        if (intEnvSyscode == 0) {
+            bootbox.alert("Please select Environment.");
+            return;
+        }
+        for (var i = 1; i <= ProjDetailsJson.length; i++) {
+            SaveProjDetailsJson.push({
+                row_Id: i,
+                details_syscode: $("#ParamRow" + i + "_Col4_details_syscode").val(), 
+                env_syscode: intEnvSyscode,
+                project_syscode: intProjectSyscode,
+                parameter_syscode: $("#ParamRow" + i + "_Col2_ddl_param_syscode").val(),
+                parameter_name: $("#ParamRow" + i + "_Col2_ddl_param_syscode :selected").text(),
+                parameter_value: $("#ParamRow" + i + "_Col3_param_value").val(),
+                is_active: "true",
+                is_deleted: "false"                
+            });
+        }
+
+        $("#hid_ProjDetailsJson").val(JSON.stringify(SaveProjDetailsJson));
+    }
+
+</script>
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-portfolio icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div>Project Details </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="main-card mb-2 card" id="divWorkflow">
+    @using (Html.BeginForm("GetProjectDetails", "Project", FormMethod.Post, new { id = "frmProjDetailsFetch", enctype = "multipart/form-data" }))
+    {
+        <div class="card-body">
+            <div class="form-row">
+                <div class="col-md-12">
+                    <div class="position-relative form-group">
+                        <label class="mb-1">Project:</label>
+                        <label for="exampleEmail11" class="">@Model.project_name</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <div class="position-relative form-group">
+                            <label for="exampleEmail11" class="">Environment: </label>
+                            @Html.DropDownListFor(model => model.env_syscode, Model.SLEnvironment ?? new SelectList(new List<SelectListItem>() { }), "--Select Environment--",
+                               new
+                               {
+                                   id = "ddlEnv",
+                                   @class = "form-control select2",
+                                   placeholder = "Select Environment",
+                                   onchange = "ddlEnvChange(this);"
+                               })
+                        </div>
+                    </div>
+                    <div style="display:none">
+                        @Html.HiddenFor(model => model.project_syscode, new { @id = "hid_project_syscodeFetch" })
+                        @Html.HiddenFor(model => model.project_name, new { @id = "hid_project_nameFetch" })
+                                           
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@using (Html.BeginForm("Submit_ProjectDetails", "Project", FormMethod.Post, new { id = "frmProjDetails", enctype = "multipart/form-data" }))
+{
+    <div class="main-card mb-3 card" id="divWorkflowLevels">
+
+        @if (Model != null && Model.project_syscode > 0 && Model.env_syscode > 0) //
+        {
+            <div class="card-body">
+                <h5 class="card-title">Add Project Details</h5>
+                <table class="mb-0 table table-bordered table-striped" id="StepsTable">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width:10%">Sr. No</th>
+                            <th style="width:20%">Parameter Name</th>
+                            <th>Parameter Value</th>
+                            <th class="text-center">Add</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model == null || Model.lstProjDetails == null || Model.lstProjDetails.Count == 0)
+                        {
+                            int rowCounter = 0, colCounter = 0;
+                            string strIdPart = "ParamRow" + ++rowCounter + "_Col";
+                            <tr id=@("ParamRow" + rowCounter)>
+                                <td class="text-center" id=@(strIdPart + ++colCounter)>1</td>
+                                <td id=@(strIdPart + ++colCounter)>
+                                    @Html.DropDownList(strIdPart + colCounter + "_ddl_param_syscode", new SelectList(Model.lstParameter, "Value", "Text"), "--Select Parameter--",
+                                                       new
+                                                       {
+                                                           id = strIdPart + colCounter + "_ddl_param_syscode",
+                                                           @class = "form-control select2",
+                                                           placeholder = "Select Parameter"
+
+                                                       })                                  
+                                </td>
+                                <td id=@(strIdPart + ++colCounter)>
+                                    <input id=@(strIdPart + colCounter + "_param_value") class="form-control" type="text" />
+                                </td>
+                                <td class="text-center" id=@(strIdPart + ++colCounter)>
+                                    <button id=@(strIdPart + colCounter + "_btnAdd") type="button" class="border-0 btn-transition btn btn-outline-primary" onclick="AddRow();">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                    @Html.Hidden(strIdPart + colCounter + "_details_syscode", 0)
+                                  
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            if (Model.lstProjDetails != null)
+                            {
+                                int rowCounter = 0;
+                                foreach (var detail in Model.lstProjDetails)
+                                {
+                                    //rowCounter = rowCounter + 1;
+                                    string strIdPart = "ParamRow" + ++rowCounter + "_Col";
+                                    int colCounter = 0;
+
+                                    <tr id=@("ParamRow" + rowCounter) class="">
+
+                                        <td class="text-center" id=@( strIdPart + ++colCounter)>@rowCounter</td>
+                                        <td id=@(strIdPart + ++colCounter)>
+                                            @Html.DropDownListFor(model => detail.parameter_syscode, new SelectList(Model.lstParameter, "Value", "Text", detail.parameter_syscode), "--Select Parameter--",
+                                                       new
+                                                       {
+                                                           id = strIdPart + colCounter + "_ddl_param_syscode",
+                                                           @class = "form-control select2",
+                                                           placeholder = "Select Parameter"
+                                                       })
+                                        </td>
+                                        <td id=@(strIdPart + ++colCounter)>
+                                            @Html.TextBoxFor(model => detail.parameter_value, new { @id = strIdPart + colCounter + "_param_value", @class = "form-control" }) @*, @disabled = @strDisabled*@
+                                        </td>
+
+                                        <td class="text-center" id=@(strIdPart + ++colCounter)>
+                                            <button id=@(strIdPart + colCounter + "_btnAdd") type="button" class="border-0 btn-transition btn btn-outline-primary" onclick="AddRow();">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                            @Html.HiddenFor(model => detail.details_syscode, new { @id = strIdPart + colCounter + "_details_syscode" })
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+                <div style="display:none">
+                    @Html.HiddenFor(model => model.project_syscode, new { @id = "hid_project_syscode" })
+                    @Html.HiddenFor(model => model.project_name, new { @id = "hid_project_name" })
+                    @Html.HiddenFor(model => model.env_syscode, new { @id = "hid_env_syscode" })
+                    @Html.HiddenFor(model => model.lstProjDetailsJson, new { @id = "hid_ProjDetailsJson" })
+                    
+                </div>
+                <div id="divHiddenDD" style="display:none">     
+                    @Html.DropDownList("#id#_ddlParameter", new SelectList(Model.lstParameter, "Value", "Text",0), "--Select Parameter--",
+                                                       new
+                                                       {
+                                                           id = "#id#_ddl_param_syscode",
+                                                           @class = "form-control #id#_select2",
+                                                           placeholder = "Select Parameter"
+                                                       })                    
+                </div>
+                <div class="divider m-0"></div>
+                <button type="submit" class="mt-2 btn btn-primary" name="Action" value="save_details" id="btn_saveProjDetails" onclick="Save(this)">Save Project Details</button>
+
+            </div>
+        }
+    </div>
+}
+
+

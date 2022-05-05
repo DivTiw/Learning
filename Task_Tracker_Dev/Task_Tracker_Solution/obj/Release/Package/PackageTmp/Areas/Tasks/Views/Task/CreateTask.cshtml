@@ -1,0 +1,38 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_CommonLibrary.Others
+@using Task_Tracker_CommonLibrary.Utility;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Create Task";
+
+}
+@section scripts{
+    @Scripts.Render("~/bundles/taskCommonJS")
+}
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-plus icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div> Create Task </div>
+        </div>
+    </div>
+</div>
+@*<div class="text-center">
+        <span style="color:blue;font-weight:bold;font-size:12px">@(string.IsNullOrEmpty(ViewBag.SuccessMessage) ? TempData["SuccessMessage"] : ViewBag.SuccessMessage)</span>
+        <span style="color:red;font-weight:bold;font-size:12px">@ViewBag.ErrorMessage</span>
+    </div>*@
+@using (Html.BeginForm("SaveStandaloneTask", "Task", new { Area = "Tasks" }, FormMethod.Post, new { id = "CreateTaskForm", enctype = "multipart/form-data"}))
+{
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+            @{
+                Html.RenderPartial("_SaveTask", @Model);
+            }            
+
+        </div>
+    </div>
+                }

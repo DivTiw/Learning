@@ -1,0 +1,122 @@
+﻿@model IEnumerable<Task_Tracker_CommonLibrary.DomainModels.TaskDM>
+@using Task_Tracker_CommonLibrary.Utility
+@{
+    ViewBag.Title = "View SubTasks";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-plus icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div> Sub Tasks</div>
+        </div>
+    </div>
+</div>
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <table class="mb-0 table table-bordered">
+            <tr>
+                <th>Sr No.</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.task_reference)
+                </th>
+             
+                <th style="width:25%">
+                    @Html.DisplayNameFor(model => model.task_subject)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.owner)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.target_date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.progress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.weightage)
+                </th>
+            </tr>
+            @if (Model != null)
+            {
+                var row = 0;
+                foreach (var item in Model)
+                {
+                    row = row + 1;
+                    var col = 0;
+                    string strIdPart = "Subtask_Row" + row + "_Col";
+                    <tr id=@("Subtask_Row"+row)>
+                        <td id=@(strIdPart + ++col)>@row</td>
+                        <td class="text-center text-muted" style="width: 80px;" id=@(strIdPart + ++col)>
+                            @Html.ActionLink(@Html.DisplayFor(modelItem => item.task_reference).ToString() + ("_" + item.task_syscode), "ViewTask", new { id = item.task_syscode.ToString().Base64Encode() })
+                            @Html.HiddenFor(modelItem => item.task_syscode)
+                        </td>                      
+                        <td id=@(strIdPart + ++col)>
+                            @Html.ActionLink(@Html.DisplayFor(modelItem => item.task_subject).ToString(), "ViewTask", new { id = item.task_syscode.ToString().Base64Encode() })
+                        </td>
+                        <td id=@(strIdPart + ++col)>
+                            @Html.DisplayFor(modelItem => item.owner)
+                        </td>
+                        <td class="text-center" id=@(strIdPart + ++col)>
+                            <div class="@item.status.status_icon">
+                                @Html.DisplayFor(modelItem => item.status.status_name)
+                            </div>
+                        </td>
+                        <td class="text-center" id=@(strIdPart + ++col)>
+                            @if (item.target_date != null)
+                            {
+                                var dt = item.target_date.Value.ToShortDateString();
+                                @dt;
+                            }
+
+                        </td>
+                        <td class="text-center" id=@(strIdPart + ++col)>
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left pr-2">
+                                            <div class="widget-numbers fsize-1 text-info">
+                                                @Html.DisplayFor(modelItem => item.progress)%
+                                            </div>
+                                        </div>
+                                        <div class="widget-content-right w-100">
+                                            <div class="progress-bar-xs progress">
+                                                <div class="progress-bar bg-info" role="progressbar" aria-valuenow="54" aria-valuemin="0" aria-valuemax="100" style="width: @(item.progress)%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td id=@(strIdPart + ++col)>
+                            <div class="input-group">
+                                @Html.TextBoxFor(modelItem =>item.weightage, new { @class = "form-control ChkPercent", @id = strIdPart + col + "_txtweightage", @type = "number" })
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-percent"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="9" style="text-align:center">
+                        No Records found!
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+

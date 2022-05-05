@@ -1,0 +1,204 @@
+﻿@model  Task_Tracker_CommonLibrary.DomainModels.DashBoard
+@using System.Linq;
+
+<script src="~/Areas/Dashboard/Views/Dashboard/Dashboard.js"></script>
+
+<div class="main-card mb-3 card">
+    <div class="card-header">
+        Team Activity
+        <div class="btn-actions-pane-right">
+            <div role="group" class="btn-group-sm btn-group dashtogglebtn">
+                <button id="btnProject" class="btn btn-focus" onclick="callProjects()">Project</button>
+                <button id="btnUser" class="btn btn-focus" onclick="callUsers()">User</button>
+            </div>
+        </div>
+    </div> 
+                <div class="card-body pt-2">
+
+                    @using (Ajax.BeginForm("GetAdminDashboard", "Dashboard", new AjaxOptions
+                    {
+                        HttpMethod = "post",
+                        OnSuccess = "OnSuccess",
+                    }, new { id = "Form", EncType = "multipart/form-data" }))
+                    {
+
+                        <div class="form-row">
+                            <div class="col-md-5">
+                                <div class="position-relative form-group mb-2">
+                                    <label for="exampleEmail11" class="">From Date</label>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.startdate, new { @class = "form-control", @id = "txtstart_date", data_toggle = "datepicker" , autocomplete = "off" })
+
+                                         <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-calendar-alt"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="position-relative form-group mb-2">
+                                    <label for="exampleEmail11" class="">To Date</label>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.enddate, new { @class = "form-control", @id = "txtend_date", data_toggle = "datepicker", autocomplete = "off" })
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-calendar-alt"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1 dashtogglebtn">
+                                <button type="submit" class="btn btn-focus mt-4" onclick="">Go</button>
+                            </div>
+                        </div>
+
+                    }
+
+
+                    <div class="table-responsive">
+                        <div id="tblUsers">
+                            <table class="mb-0 table table-bordered">
+                                <tr>
+                                    <th class="text-center">Sr No.</th>
+                                    <th style="width:25%">
+                                        Employee Name
+                                    </th>
+                                    <th>
+                                        Project Name
+                                    </th>
+                                    <th>
+                                        Module Name
+                                    </th>
+                                    <th class="text-center">
+                                        Hours Worked
+                                    </th>
+                                    <th style="display:none;">
+                                        Chart
+                                    </th>
+                                </tr>
+                                @if (Model != null)
+                                {
+                                    var cnt = 0;
+
+
+                                    foreach (var item in Model.lstUsersProjects)
+                                    {
+                                        cnt = cnt + 1;
+                                        <tr>
+                                            <td class="text-center">@cnt</td>
+                                            <td  style="width: 80px;">
+                                                @Html.DisplayFor(modelItem => item.emp_name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.project_name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.module_name)
+                                            </td>
+                                            <td class="text-center">
+                                                @Html.DisplayFor(modelItem => item.hours_spent)
+                                            </td>
+                                            <td style="display:none;">
+                                                <div style="text-align: center;width:400px; height:400px;">
+                                                    <canvas id="pieData"></canvas>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="9" style="text-align:center">
+                                            No Records found!
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+              
+                    <div class="table-responsive">
+                        <div id="tblProjects">
+                            <table class="mb-0 table table-bordered">
+                                <tr>
+                                    <th class="text-center">Sr No.</th>
+                                    <th style="width:25%">
+                                        Project Name
+                                    </th>
+                                    <th>
+                                        Employee Name
+                                    </th>
+                                    <th>
+                                        Module Name
+                                    </th>
+                                    <th class="text-center">
+                                        Hours Worked
+                                    </th>
+                                </tr>
+                                @if (Model != null)
+                                {
+                                    var cnt = 0;
+                                    foreach (var item in Model.lstUsersProjects)
+                                    {
+                                        cnt = cnt + 1;
+                                        <tr>
+                                            <td class="text-center">@cnt</td>
+                                            <td  style="width: 80px;">
+                                                @Html.DisplayFor(modelItem => item.project_name)
+
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.emp_name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.module_name)
+                                            </td>
+                                            <td class="text-center">
+                                                @Html.DisplayFor(modelItem => item.hours_spent)
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="9" style="text-align:center">
+                                            No Records found!
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mb-3 d-none">
+                <h5 class="menu-header-title text-capitalize mb-3 fsize-3">Employee/project Name</h5>
+                <div role="group" class="mb-3 btn-group-lg btn-group">
+                    <button type="button" class="btn-shadow active btn btn-primary">Hour</button>
+                    <button type="button" class="btn-shadow  btn btn-primary">Day</button>
+                    <button type="button" class="btn-shadow  btn btn-primary">Week</button>
+                    <button type="button" class="btn-shadow  btn btn-primary">Month</button>
+                </div>
+            </div>
+
+            <div class="row d-none">
+                <div class="col-sm-12 col-md-7 col-lg-8 mx-auto">
+                    <div class="mb-3 card">
+                        <div class="card-header-tab card-header">
+                            <div class="card-header-title font-size-lg text-capitalize font-weight-normal">Traffic Sources</div>
+                            <div class="btn-actions-pane-right text-capitalize">
+                                <button class="btn btn-warning">Actions</button>
+                            </div>
+                        </div>
+                        <div class="pt-0 card-body">
+                            <div id="chart-combined"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>

@@ -1,0 +1,109 @@
+﻿@model IEnumerable<Task_Tracker_CommonLibrary.DomainModels.TaskDM>
+@using Task_Tracker_CommonLibrary.Utility
+
+@{
+    ViewBag.Title = "Task Activity - Today";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-display1 icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div>@ViewBag.Title</div>
+        </div>
+    </div>
+</div>
+@*<div class="text-center">
+    <span style="color:blue;font-weight:bold;font-size:12px">@(string.IsNullOrEmpty(ViewBag.SuccessMessage) ? TempData["SuccessMessage"] : ViewBag.SuccessMessage)</span>
+    <span style="color:red;font-weight:bold;font-size:12px">@ViewBag.ErrorMessage</span>
+</div>*@
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <table class="mb-0 table table-bordered">
+            <tr>
+                <th>Sr No.</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.task_reference)
+                </th>
+                <th style="width:25%">
+                    @Html.DisplayNameFor(model => model.task_subject)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.project.project_name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.module.module_name)
+                </th>
+               
+                <th class="text-center">Started By </th>
+                <th class="text-center">Start Time</th>   
+                <th class="text-center">Stop Time</th>         
+                <th class="text-center">Duration</th>                     
+                <th class="text-center">Status</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.target_date)
+                </th>           
+                <th class="text-center">Created By</th>
+            </tr>
+            @if (Model != null && Model.Count() > 0)
+            {
+                var cnt = 0;
+                foreach (var item in Model)
+                {
+                    cnt = cnt + 1;
+                    <tr>
+                        <td>@cnt</td>
+                        <td class="text-center text-muted" style="width: 80px;">
+                            @Html.ActionLink(@Html.DisplayFor(modelItem => item.task_reference).ToString(), "ViewTask", "Task",new { area = "Tasks", id = item.task_syscode.ToString().Base64Encode() }, new { })
+                            @Html.HiddenFor(modelItem => item.task_syscode)
+                        </td>
+                        <td>
+                            @Html.ActionLink(@Html.DisplayFor(modelItem => item.task_subject).ToString(), "ViewTask","Task", new { area = "Tasks", id = item.task_syscode.ToString().Base64Encode() }, new { })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.project.project_name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.module.module_name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.strActionedBy)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.taskUserRecord.start_time)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.taskUserRecord.stop_time)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.taskUserRecord.duration)
+                        </td>
+                        <td class="text-center">
+                            <div class="@item.status.status_icon">
+                                @Html.DisplayFor(modelItem => item.status.status_name)
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.target_date)                         
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.strCreatedBy)
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="12" style="text-align:center">
+                        No Records found!
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

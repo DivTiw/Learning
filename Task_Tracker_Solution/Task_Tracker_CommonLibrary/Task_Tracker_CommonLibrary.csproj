@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7A1B4A3E-4A5A-4502-838A-4DE179B8B174}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Task_Tracker_CommonLibrary</RootNamespace>
+    <AssemblyName>Task_Tracker_CommonLibrary</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=7.0.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.7.0.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="jose-jwt">
+      <HintPath>..\..\External DLL\jose-jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="JWT">
+      <HintPath>..\..\External DLL\JWT.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DomainModels\CategoryDM.cs" />
+    <Compile Include="DomainModels\DashBoardUsers.cs" />
+    <Compile Include="DomainModels\DashUsers.cs" />
+    <Compile Include="DomainModels\DashUsersProjects.cs" />
+    <Compile Include="DomainModels\DashWorkingUsers.cs" />
+    <Compile Include="DomainModels\DDLDTO.cs" />
+    <Compile Include="DomainModels\EmailTemplateDM.cs" />
+    <Compile Include="DomainModels\GroupDM.cs" />
+    <Compile Include="DomainModels\ModuleDM.cs" />
+    <Compile Include="DomainModels\ProjectDM.cs" />
+    <Compile Include="DomainModels\ReleaseDetailsDM.cs" />
+    <Compile Include="DomainModels\ReleaseDM.cs" />
+    <Compile Include="DomainModels\SearchDTO.cs" />
+    <Compile Include="DomainModels\SelectItemDTO.cs" />
+    <Compile Include="DomainModels\ModuleWFLevelMapDM.cs" />
+    <Compile Include="DomainModels\TaskDM.cs" />
+    <Compile Include="DomainModels\TaskTreeDM.cs" />
+    <Compile Include="DomainModels\TaskUserRecordDM.cs" />
+    <Compile Include="DomainModels\TrailFileCommentVM.cs" />
+    <!--<Compile Include="DomainModels\WorkflowDM.cs" />-->
+    <Compile Include="DomainModels\WorkflowDM.cs" />
+    <Compile Include="Entity\CE_vw_employee_master.cs" />
+    <Compile Include="Entity\EmailDefinitions.cs" />
+    <Compile Include="Entity\EmailRecipientMaster.cs" />
+    <Compile Include="Entity\EmailTypeMaster.cs" />
+    <Compile Include="Entity\EmailTemplate.cs" />
+    <Compile Include="Entity\EnvironmentMaster.cs" />
+    <Compile Include="Entity\GroupMaster.cs" />
+    <Compile Include="Entity\GroupMember.cs" />
+    <Compile Include="Entity\JMBaseBusinessEntity.cs" />
+    <Compile Include="Entity\JMTask.cs" />
+    <Compile Include="Entity\LoginUser.cs" />
+    <Compile Include="Entity\Menu.cs" />
+    <Compile Include="DomainModels\OperationDetailsDTO.cs" />
+    <Compile Include="Entity\ModuleLevelDetail.cs" />
+    <Compile Include="Entity\ModuleLevelUserMapping.cs" />
+    <Compile Include="Entity\ProgressMaster.cs" />
+    <Compile Include="Entity\ProjectDetails.cs" />
+    <Compile Include="Entity\ProjectMaster.cs" />
+    <Compile Include="Entity\ModuleMaster.cs" />
+    <Compile Include="Entity\ProjectParameterMaster.cs" />
+    <Compile Include="Entity\ProjModUserMapping.cs" />
+    <Compile Include="Entity\ReleaseDetails.cs" />
+    <Compile Include="Entity\ReleaseInstructions.cs" />
+    <Compile Include="Entity\TaskAccessGroupMenuDetails.cs" />
+    <Compile Include="Entity\TaskActivityMaster.cs" />
+    <Compile Include="Entity\TaskAttachment.cs" />
+    <Compile Include="Entity\TaskCategoryContact.cs" />
+    <Compile Include="Entity\CategoryMaster.cs" />
+    <Compile Include="Entity\TaskLoginHistory.cs" />
+    <Compile Include="Entity\TaskPriorityMaster.cs" />
+    <Compile Include="Entity\TaskStatusMaster.cs" />
+    <Compile Include="Entity\TaskTrail.cs" />
+    <Compile Include="Entity\TaskTrailDetails.cs" />
+    <Compile Include="Entity\TaskTypeMaster.cs" />
+    <Compile Include="Entity\TaskUserMapping.cs" />
+    <Compile Include="Entity\TaskUserRecord.cs" />
+    <Compile Include="Entity\TaskUserRoleMaster.cs" />
+    <Compile Include="Entity\TaskAccessGroupMaster.cs" />
+    <Compile Include="Entity\TT_vw_employee_master.cs" />
+    <Compile Include="Entity\vw_department_master.cs" />
+    <Compile Include="Entity\vw_employee_master.cs" />
+    <Compile Include="Entity\WorkflowLevelDetails.cs" />
+    <Compile Include="Entity\WorkflowMaster.cs" />
+    <Compile Include="Interface\IOperationDetailsDTO.cs" />
+    <Compile Include="Others\DBTableNameEnums.cs" />
+    <Compile Include="Others\DBTableNames.cs" />
+    <Compile Include="Others\Email_Dictionary.cs" />
+    <Compile Include="Others\Email_Enums.cs" />
+    <Compile Include="Others\Enum_Master.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\ComLibCommon.cs" />
+    <Compile Include="Others\DomainAttribues.cs" />
+    <Compile Include="Utility\EnumHelpers.cs" />
+    <Compile Include="Utility\PredicateBuilder.cs" />
+    <Compile Include="Utility\TokenServer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EmailTemplates\Release_Done.html" />
+    <Content Include="EmailTemplates\Sch_StopTask.html" />
+    <Content Include="EmailTemplates\Sch_UsrWklyActivity_Rpt.html" />
+    <Content Include="EmailTemplates\ST_Task_Created.html" />
+    <Content Include="EmailTemplates\Task_Acknowledged.html" />
+    <Content Include="EmailTemplates\Task_Complete.html" />
+    <Content Include="EmailTemplates\Task_Discard.html" />
+    <Content Include="EmailTemplates\Task_OnHold.html" />
+    <Content Include="EmailTemplates\Task_InProgress.html" />
+    <Content Include="EmailTemplates\Task_Initiated.html" />
+    <Content Include="EmailTemplates\Task_Updated.html" />
+    <Content Include="EmailTemplates\Weightage_Added.html" />
+    <Content Include="EmailTemplates\WF_Task_Created.html" />
+    <Content Include="EmailTemplates\Inform_TO.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.0\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.0\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

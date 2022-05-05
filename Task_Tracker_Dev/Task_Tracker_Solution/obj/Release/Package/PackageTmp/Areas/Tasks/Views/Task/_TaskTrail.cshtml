@@ -1,0 +1,63 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_Solution.Utility
+
+<div class="main-card mb-3 card">
+    <div class="card-header">
+        <i class="header-icon pe-7s-clock icon-gradient bg-premium-dark"> </i>History
+    </div>
+    <div class="card-body">
+        <div class="scroll-area-lg tasktrailarea">
+            <div class="scrollbar-container ps--active-y ps">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <div class="vertical-without-time vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
+
+                            @if (!(Model == null || Model.lstTrail == null || Model.lstTrail.Count <= 0))
+                            {
+                                foreach (var trail in Model.lstTrail)
+                                {
+                                    <div class="vertical-timeline-item vertical-timeline-element">
+                                        <div>
+                                            <span class="vertical-timeline-element-icon bounce-in">
+                                                <i class="newcss badge-dot @(trail.Activity?.activity_icon.ToString())"></i>
+                                            </span>
+                                            <div class="vertical-timeline-element-content bounce-in">
+                                                <h3 class="timeline-title d-inline">@trail.trail_description </h3>@*<span class="d-inline"> @trail.created_by</span><span class="timeline-title"> on @trail.created_on</span>*@
+                                                <p>
+                                                    @if (trail != null)
+                                                    {
+                                                        @Html.FileLinkFor(Model.lstAttachments, trail.trail_comments)
+                                                    }
+
+                                                    @*@if (trail != null && trail.trail_comments != null && trail.trail_comments.Contains("File(s) :"))
+                                                        {
+                                                            var fnSplit = trail.trail_comments.Split(':');
+                                                            fnSplit = fnSplit[1].Split(';');
+
+                                                            foreach (var fName in fnSplit)
+                                                            {
+                                                                var attachment = Model.lstAttachments.FirstOrDefault(x => x.attachment_filename == fName.Trim());
+
+                                                                <a href="@cWebApiNames.AppDownloadAttachments?AttachGuid=@attachment.attachment_identifier&MFileId=@attachment.mongo_file_id&FileName=@attachment.attachment_filename">
+                                                                    <i class="fa fa-paperclip btn-icon-wrapper"></i> @attachment.attachment_filename
+                                                                </a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @trail.trail_comments
+                                                        }*@
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

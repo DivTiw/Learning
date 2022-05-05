@@ -1,0 +1,341 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_CommonLibrary.DomainModels
+@using Task_Tracker_CommonLibrary.Utility
+@using Task_Tracker_CommonLibrary.Others
+@{
+    ViewBag.Title = "Assign Task";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<script src="~/Content/FilterJS/Filter.js"></script>
+    <link href="~/Content/FilterJS/Filter.css" rel="stylesheet" />*@
+<script>
+    $(document).ready(function () {
+        $(".ahrefView").click(function () {
+
+            var clID = $(this).attr("id");
+
+            var ids = clID.split("|");
+            var clTitle = ids[0];
+            var clSyscode = ids[1];
+
+            var requesterRemarksObject = $("#cltext-" + clSyscode);
+            var cltext = $("#cltext-" + clSyscode).val();
+
+            $("#dialogRequestedRemarks").modal();
+
+            $("#insideDialogTitle").html(clTitle);
+            $("#insideDialogRemarks").html(cltext);
+
+            return false;
+
+        });
+    });
+
+    function toggleChildDisplay(curObj, TaskRef) {
+        curObj.parentElement.classList.toggle("collapsed")
+        $(".Child_" + TaskRef).toggleClass("hideMe");
+    }
+</script>
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-note2 icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div>Assign Task</div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="main-card mb-1 card">
+            <div class="card-body pt-2 pb-1">
+                @{
+                    Html.RenderPartial("_SearchControl", Model.searchDTO);
+                    //Html.RenderPartial("_SearchControl", new SearchDTO { actionName = "MyCreatedTasks" });
+                }
+            </div>
+        </div>
+        <div class="main-card mb-3 card">
+            <div class="card-body pt-2">
+
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label for="exampleEmail11" class="mt-1 mb-1">Module Description:</label>
+                        @Html.DisplayFor(model => model.module.module_description)
+                    </div>
+                </div>
+                @if (!(Model == null || Model.lstTaskDM == null || Model.lstTaskDM.Count <= 0))
+                {
+                    <div class="table-responsive filterable">
+                        @*<div class="panel-heading">
+                            <h3 class="panel-title">
+                                <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span>Click To Apply Filter</button>
+                            </h3>
+                        </div>*@
+                        <table class="table mb-0 table table-bordered createdbymetbl">
+                            <thead>
+                                <tr class="filters">
+                                    @{
+                                        @*int colNum = 0;
+                                            <th>
+                                                <input type="text" class="form-contro text-center" style="width:5%" placeholder="Sr. No." disabled /><span>Sr No.</span>
+                                                <a class="border-0 btn-transition btn btn-outline-primary expandlink p-0" onclick="Alert('Column @colNum++');"></a>
+                                            </th>
+                                            <th>priority<a class="border-0 btn-transition btn btn-outline-primary expandlink p-0" onclick="Alert('Column @colNum++');"></a></th>
+                                            <th>
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.task_subject)" disabled />
+                                                <a class="border-0 btn-transition btn btn-outline-primary expandlink p-0" onclick="Alert('Column @colNum++');"></a>
+                                            </th>
+                                            <th><input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.project.project_name)" disabled /></th>
+                                            <th><input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.module.module_name)" disabled /></th>
+                                            <th class="text-center"><input type="text" class="form-control" placeholder="Status" disabled /></th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.target_date)
+                                            </th>
+                                            <th class="text-center">
+                                                <input type="text" class="form-control" placeholder="@Html.DisplayNameFor(model => model.progress)" disabled />
+                                            </th>
+                                            <th class="text-center">Parent Task</th>
+                                            <th class="text-center">SubTask</th>
+                                            <th class="text-center"><input type="text" class="form-control" placeholder="Weightage" disabled /></th>
+                                            <th class="text-center">Last Comment</th>
+                                            <th class="text-center">Modified By</th>
+                                            <th class="text-center">Modified On</th>*@
+                                        <th class="text-center" style="width:5%">Sr No.</th>
+                                        <th>priority</th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.task_subject)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.project.project_name)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.module.module_name)
+                                        </th>
+                                        <th class="text-center">Status</th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.target_date)
+                                        </th>
+                                        <th class="text-center">
+                                            @Html.DisplayNameFor(model => model.progress)
+                                        </th>
+                                        <th class="text-center">Parent Task</th>
+                                        <th class="text-center">SubTask</th>
+                                        <th class="text-center">Weightage</th>
+                                        <th class="text-center">Last Comment</th>
+                                        <th class="text-center">Modified By</th>
+                                        <th class="text-center">Modified On</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var cnt = 0;
+                                    var displayRowCnt = 0;
+                                    //List<TaskDM> ChildTasks = new List<TaskDM>();
+                                    foreach (var item in Model.lstTaskDM)
+                                    {
+                                        cnt = cnt + 1;
+                                        var parentTask = string.Empty;
+                                        var isParentRow = false;
+                                        var isChildRow = false;
+                                        var childRowStyleClasses = string.Empty;
+
+                                        if (item.module_syscode == null || item.module_syscode == 0)
+                                        {
+                                            //Standalone tasks are not considered the parent task.
+                                            displayRowCnt = displayRowCnt + 1;
+                                            //ChildTasks = new List<TaskDM>();
+                                        }
+                                        else if (item.parent_task_syscode == null || item.parent_task_syscode == 0)
+                                        {
+                                            parentTask = "Parent_" + item.task_reference;
+                                            isParentRow = true;
+                                            displayRowCnt = displayRowCnt + 1;
+                                        }
+                                        else
+                                        {
+                                            //ChildTasks.Add(item);
+                                            isChildRow = true;
+                                            //continue;
+                                            parentTask = "Child_" + item.parentTaskRef + " hideMe";
+                                        }
+
+                                        if (isChildRow)
+                                        {
+                                            childRowStyleClasses = "childrowsdata";
+                                        }
+
+                                        <tr id=@("TaskRow_"+cnt) class="@parentTask  @childRowStyleClasses">
+                                            @if (!isParentRow)
+                                            {
+                                                <td class="text-center">
+                                                    @if (!isChildRow)
+                                                    {
+                                                        @displayRowCnt
+                                                    }
+
+
+                                                </td>
+                                            }
+                                            else
+                                            {
+
+                                                <td class="td-header collapsed text-center">
+                                                    @if (!isChildRow)
+                                                    {
+                                                        @displayRowCnt
+                                                    }
+
+                                                    <a class="border-0 btn-transition btn btn-outline-primary expandlink p-0" onclick="toggleChildDisplay(this, '@item.task_reference');"></a>
+                                                </td>
+                                            }
+                                            <td class="text-center">
+                                                @if (@item.priority != null)
+                                                {
+                                                    <i class="@item.priority.priority_icon" title="@item.priority.priority_name"></i>
+                                                }
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink(item.task_subject, "ViewTask", new { id = item.task_syscode.ToString().Base64Encode() })
+                                            </td>
+                                            @*<td>
+                                                    @Html.ActionLink(@Html.DisplayFor(modelItem => item.task_subject).ToString(), "ViewTask", new { id = item.task_syscode.ToString().Base64Encode() })
+                                                </td>*@
+                                            @*<td class="text-center">
+                                                    @if (@item.priority != null)
+                                                    {
+                                                        <i class="@item.priority.priority_icon" title="@item.priority.priority_name"></i>
+                                                    }
+                                                </td>*@
+                                            @*<td class="text-center text-muted">
+                                                    @Html.ActionLink(@Html.DisplayFor(modelItem => item.task_reference).ToString(), "ViewTask", new { id = item.task_syscode.ToString().Base64Encode() })
+                                                    @Html.HiddenFor(modelItem => item.task_syscode)
+                                                </td>*@
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.project.project_name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.module.module_name)
+                                            </td>
+
+                                            @*<td>
+                                                    @Html.DisplayFor(modelItem => item.owner)
+                                                </td>*@
+                                            <td class="text-center">
+                                                <div class="@item.status.status_icon">
+                                                    @Html.DisplayFor(modelItem => item.status.status_name)
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                @Html.DisplayFor(modelItem => item.target_date)
+                                            </td>
+                                            <td class="text-center">
+                                                @if (item.module_syscode > 0)
+                                                {
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-outer">
+                                                            <div class="widget-content-wrapper">
+                                                                <div class="widget-content-left pr-2">
+                                                                    <div class="widget-numbers progressbar-success">
+                                                                        @Html.DisplayFor(modelItem => item.progress)%
+                                                                    </div>
+                                                                </div>
+                                                                <div class="widget-content-right w-100">
+                                                                    <div class="progress-bar-xs progress">
+                                                                        <div class="progress-bar bg-success" role="progressbar" aria-valuenow="54" aria-valuemin="0" aria-valuemax="100" style="width: @(item.progress ?? 0)%;"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.parent_task_syscode != null)
+                                                {
+                                                    <a title=@item.parentTaskRef class="border-0 btn-transition btn btn-outline-primary" href="@Url.Action("ViewTask", "Task", new { id = item.parent_task_syscode.ToString().Base64Encode() })">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                    //@Html.ActionLink(@Html.DisplayFor(modelItem => item.parentTaskRef).ToString(), "ViewTask", new { id = item.parent_task_syscode.ToString().Base64Encode() })
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @if (item.task_status_syscode == (int)Enum_Master.StatusEnum.Open || item.task_status_syscode == (int)Enum_Master.StatusEnum.InProgress || item.task_status_syscode == (int)Enum_Master.StatusEnum.Initiate || item.task_status_syscode == (int)Enum_Master.StatusEnum.ToDo)
+                                                {
+                                                    <div class="widget-content-right">
+                                                        <a title=@item.parentTaskRef class="border-0 btn-transition btn btn-outline-primary" href="@Url.Action("CreateSubtask", "Task", new { id = item.task_syscode.ToString().Base64Encode() })">
+                                                            <i class="fa fa-plus"></i>
+                                                        </a>
+                                                        @*To Do Later*@
+                                                        @*<a class="border-0 btn-transition btn btn-outline-primary" href="@Url.Action(" ViewSubtasks", "Task" , new { id=item.task_syscode.ToString().Base64Encode()})">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a>*@
+                                                    </div>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @if (item.module_syscode > 0)
+                                                {
+                                                    if ((item.task_status_syscode == (int)Enum_Master.StatusEnum.Open || item.task_status_syscode == (int)Enum_Master.StatusEnum.InProgress || item.task_status_syscode == (int)Enum_Master.StatusEnum.Initiate || item.task_status_syscode == (int)Enum_Master.StatusEnum.ToDo) && item.parent_task_syscode != null && item.parent_task_syscode > 0)
+                                                    {
+                                                        <div class="widget-content-right wtgbtn">
+                                                            <a href="@Url.Action("SetWeightage", "Task", new { id = item.parent_task_syscode.ToString().Base64Encode() })" class="btn btn-primary">
+                                                                @Html.DisplayFor(modelItem => item.weightage)
+                                                                <span class="badge badge-pill badge-light">
+                                                                    <i class="fa fa-plus" style="font-size:9px;"></i>
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.DisplayFor(modelItem => item.weightage)
+                                                    }
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.lstTrail.Count() > 0)
+                                                {
+                                                    string title = "Task " + item.task_reference + " - Last Comments";
+                                                    string text = item.lstTrail.First().trail_comments;
+                                                    string tc_syscode = item.task_syscode.ToString();
+
+                                                    if (text.Length > 30)
+                                                    {
+                                                        <label>@text.ToString().Substring(0, 30) ...</label>
+                                                        <a href="#" id="@title|@tc_syscode" class="ahrefView">Read More</a>
+                                                        <input type="hidden" id="cltext-@tc_syscode" value="@text" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <label>@text</label>
+                                                    }
+                                                    @*@Html.DisplayFor(modelItem => item.lstTrail.First().trail_comments)*@
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @Html.DisplayFor(modelItem => item.modified_by_name)
+                                            </td>
+                                            <td class="text-center">
+                                                @Html.DisplayFor(modelItem => item.modified_on)
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                                    }
+                                    else
+                                    {
+                                        <div style="text-align:center">
+                                            No Records found!
+                                        </div>
+                                    }
+            </div>
+        </div>
+    </div>
+</div>

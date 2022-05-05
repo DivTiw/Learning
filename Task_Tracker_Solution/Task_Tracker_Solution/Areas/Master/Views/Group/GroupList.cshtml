@@ -1,0 +1,103 @@
+﻿@using Task_Tracker_CommonLibrary.Utility;
+@model IList<Task_Tracker_Solution.Areas.Master.Models.GroupViewModel>
+@{
+    ViewBag.Title = "User Groups";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Content/jquery-base64-master/jquery.base64.js"></script>
+<script src="~/Content/jquery-base64-master/jquery.base64.min.js"></script>
+
+<script type="text/javascript">
+
+    function EditGroup(id) {
+        //alert(id);
+        try {
+
+            group_syscode = $.base64.encode(id);
+            var url = '@Url.Action("EditGroup", "Group", new { id = "_syscode" })';
+            window.location.href = url.replace('_syscode', group_syscode);
+
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+</script>
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-menu icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div>Groups</div>
+        </div>
+        <div class="page-title-actions">
+            <a class="mr-2 btn-icon btn-square btn btn btn-light btn-shadow" href="../Group/CreateGroup"><i class="pe-7s-ticket btn-icon-wrapper"> </i>Create Group</a>
+        </div>
+    </div>
+</div>
+
+<div class="main-card mb-2 card">
+
+    <div class="card-body">
+        <table class="mb-0 table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center">Sr No.</th>
+                    <th>Group Name</th>
+                    <th>Group Description</th>
+                    <th>Created By</th>
+                    <th>Created On</th>
+                    <th class="text-center">Is Active</th>
+                    <th class="text-center">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count() > 0)
+                {
+                    var cnt = 0;
+                    foreach (var group in Model)
+                    {
+                        cnt = cnt + 1;
+                        string EditViewClass = string.Empty, hideClass = string.Empty;
+                        if (group.RecordHasWriteAccess)
+                        {
+                            EditViewClass = "fa-edit";
+                        }
+                        else
+                        {
+                            hideClass = "hideMe";
+                            EditViewClass = "fa-eye";
+                        }
+                        <tr>
+                            <td class="text-center">@cnt</td>
+                            <td>@group.group_name</td>
+                            <td>@group.group_description</td>
+                            <td>@group.created_by_name</td>
+                            <td>@Html.DisplayFor(m => group.created_on)</td>
+                            <td>@group.is_active.CastToYesNo()</td>
+                            <td class="text-center">
+                                <button class="border-0 btn-transition btn btn-outline-primary" onclick="EditGroup(@group.group_syscode)">
+                                    <i class="fa @EditViewClass"></i>
+                                </button>
+                            </td>
+                            <td style="display:none">@group.group_syscode</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" style="text-align:center">
+                            No Records found!
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>

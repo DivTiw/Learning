@@ -1,0 +1,12 @@
+1. consol app
+2. add reference from CommonLibrary, DAL
+3. Fetch the Distinct member and it's task data from new SP
+3a If count > 0 create new excel woorkbook
+4. loop through members in C# code 
+
+5. create the task table for each employee syscode and make a sheet for that employee in excel.
+6. pass the employee syscode in for loop to the lms sp for fetching the attendance data
+6a create new sheet for every emp_syscode
+7. use the same sheet created above and plot the attendance data below task data
+8. move to next employee go to step 5.
+9. send excel sheet in email

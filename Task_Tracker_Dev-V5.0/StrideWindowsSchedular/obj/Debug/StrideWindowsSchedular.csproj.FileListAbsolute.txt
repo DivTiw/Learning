@@ -1,0 +1,4 @@
+D:\Projects\Task_Tracker\Task_Tracker_Dev-V5.0\StrideWindowsSchedular\obj\Debug\StrideWindowsSchedular.csprojResolveAssemblyReference.cache
+D:\Projects\Task_Tracker\Task_Tracker_Dev-V5.0\StrideWindowsSchedular\obj\Debug\StrideWindowsSchedular.csproj.StrideWindowsSchedular.exe.config
+D:\Projects\Task_Tracker\Task_Tracker_Dev-V5.0\StrideWindowsSchedular\obj\Debug\StrideWindowsSchedular.exe
+D:\Projects\Task_Tracker\Task_Tracker_Dev-V5.0\StrideWindowsSchedular\obj\Debug\StrideWindowsSchedular.pdb

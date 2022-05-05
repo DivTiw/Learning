@@ -1,0 +1,162 @@
+﻿@using Task_Tracker_CommonLibrary.Utility;
+
+@model Task_Tracker_Solution.Areas.Master.Models.WorkflowViewmodel
+@{
+    ViewBag.Title = "CreateWorkflow";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    @Scripts.Render("~/bundles/Workflow");
+}
+
+
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-plus icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div> Create Workflow </div>
+        </div>
+    </div>
+</div>
+
+
+@using (Html.BeginForm("Submit", "Workflow", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="main-card mb-2 card" id="divWorkflow">
+        <div class="card-body">
+            <div class="form-row">               
+                <div class="col-md-4">
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail11" class="">Workflow Name</label>
+                        @Html.TextBoxFor(model => model.workflow_name, new { @class = "form-control", @id = "txtworkflow_name" })
+                    </div>
+                </div>
+                <div class="col-md-4 pl-4">
+                    <div class="position-relative form-group mt-4 mb-0">
+                        <label>Is Active</label>
+                        @Html.CheckBoxFor(model => model.is_active)
+                    </div>
+                </div>
+                <div class="col-md-4 text-right">
+                    @*style="display:none"*@
+                    @*<button type="button" class="mt-4 btn btn-primary" name="Action" value="save_workflow" onclick="Save();">Save Workflow Name</button>*@
+                    <button type="submit" id="btnSaveWorkflow" class="mt-4 btn btn-primary" name="Action" value="save_workflow" onclick="Save(this);">Save Workflow Name</button>
+                    @if (Model.workflow_syscode > 0)
+                    {
+                        @*<a title="Add" class="border-0 mt-4 btn btn-primary" href="@Url.Action("CopyWorkflow", "Workflow", new { id=@Model.workflow_syscode.ToString().Base64Encode()})">
+                            <i class="fa fa-plus"></i> Copy Workflow
+                        </a>*@
+                        <button type="submit" id="btnCopyWorkflow" class="mt-4 btn btn-primary" name="Action" value="copy_workflow" onclick="Confirm(this);">Copy Workflow</button>
+
+                    }
+                </div>
+                @if (Model.workflow_syscode > 0)
+                {
+                    <div class="col-md-12  text-center">
+                        <div class="position-relative form-group">
+                            <label for="exampleEmail11" class="">Number of Modules using this Workflow :</label><b>@Model.module_count</b>
+                        </div>
+                    </div>
+                }
+                <div style="display:none">
+                    @Html.HiddenFor(model => model.workflow_syscode, new { @id = "hid_workflow_syscode" })
+                    @Html.HiddenFor(model => model.lstWFLevelsJson, new { @id = "hid_WFLevelList" })
+                    @Html.HiddenFor(model => model.module_count, new { @id = "hid_module_cnt" })
+                    <input type="hidden" value=@(Model.workflow_syscode) id="hid_workflow_syscode_BKUP" /> @*Having this backup hidden field when in case of new workflow creation HiddenFor is not binding the workflow_syscode.*@
+                </div>              
+            </div>
+
+        </div>
+    </div>
+
+    if (Model != null && Model.workflow_syscode > 0)
+    {
+        <div class="main-card mb-3 card" id="divWorkflowLevels">
+            <div class="card-body">
+                <h5 class="card-title">Add Levels</h5>
+                <table class="mb-0 table table-bordered table-striped" id="StepsTable">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Sr. No</th>
+                            <th>Level Name</th>
+                            <th>Level Order</th>
+                            <th class="text-center">Is Active</th>
+                            <th class="text-center">Add</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model == null || Model.lstWFLevels == null || Model.lstWFLevels.Count == 0)
+                        {
+                            int rowCounter = 0, colCounter = 0;                            
+                            string strIdPart = "WFLevelTableRow" + ++rowCounter + "_Col";
+                            <tr id=@("WFLevelTableRow" + rowCounter)>
+                                <td class="text-center" id=@(strIdPart + ++colCounter)>1</td>
+                                <td id=@(strIdPart + ++colCounter)><input id=@(strIdPart + colCounter + "_level_name") class="form-control" type="text" /></td>
+                                <td id=@(strIdPart + ++colCounter)><input id=@(strIdPart + colCounter + "_level_order") class="form-control" type="number" min="0" /></td>
+                                <td class="text-center" id=@(strIdPart + ++colCounter)><input id=@(strIdPart + colCounter + "_is_active") type="checkbox" checked /></td>
+                                <td class="text-center" id=@(strIdPart + ++colCounter)>
+                                    <button id=@(strIdPart + colCounter +"_btnAdd") type="button" class="border-0 btn-transition btn btn-outline-primary" onclick="AddRow();">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                    @Html.Hidden(strIdPart + colCounter + "_level_syscode", 0)
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            if (Model.lstWFLevels != null)
+                            {
+                                int rowCounter = 0;
+                                string strDisabled = null;
+                                if (Model.module_count > 0)
+                                {
+                                    strDisabled = "disabled";
+                                }
+                                foreach (var level in Model.lstWFLevels)
+                                {
+                                    //rowCounter = rowCounter + 1;
+                                    string strIdPart = "WFLevelTableRow" + ++rowCounter + "_Col";
+                                    int colCounter = 0;
+
+
+                                    <tr id=@("WFLevelTableRow" + rowCounter) class="statuscheck">
+                                        @*col1*@
+                                        <td class="text-center" id=@( strIdPart + ++colCounter)>@rowCounter</td>
+                                        @*col2*@
+                                        <td id=@(strIdPart + ++colCounter)>
+                                            @Html.TextBoxFor(model => level.level_name,  new { @id = strIdPart + colCounter + "_level_name", @class = "form-control" }) @*, @disabled = (@Model.module_count == 0) ? null : "disabled"*@
+                                        </td>
+                                        @*col3*@
+                                        <td id=@(strIdPart + ++colCounter)>
+                                            @Html.TextBoxFor(model => level.level_order, new { @id = strIdPart + colCounter + "_level_order", @class = "form-control", @type = "number", @min = "0" }) @*, @disabled = @strDisabled*@
+                                        </td>
+                                        @*col4*@
+                                        <td class="text-center" id=@(strIdPart + ++colCounter)>
+                                            @Html.CheckBoxFor(model => level.is_active, new { @id = strIdPart + colCounter + "_is_active" })
+                                        </td>
+                                        @*col5*@
+                                        <td class="text-center" id=@(strIdPart + ++colCounter)>
+                                            <button id=@(strIdPart + colCounter +"_btnAdd") type="button" class="border-0 btn-transition btn btn-outline-primary" onclick="AddRow();">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                            @Html.HiddenFor(model => level.level_syscode, new { @id = strIdPart + colCounter + "_level_syscode" })
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+                <div class="divider m-0"></div>
+                <button type="submit" class="mt-2 btn btn-primary" name="Action" value="save_level" id="btn_saveWFLevels" onclick="Save(this)">Save Workflow Levels</button>
+
+            </div>
+        </div>
+    }
+}
+

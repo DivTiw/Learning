@@ -1,0 +1,36 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+
+<div class="page-title-heading">
+    <div class="page-title-icon">
+        <i class="pe-7s-note2">
+        </i>
+    </div>
+    <div>
+        Task Reference:  @Model.task_reference@*@Html.DisplayFor(x=> x.task_reference)*@
+        <div class="page-title-subheading">
+            <i>Created By: @Model.strCreatedBy on @Html.DisplayFor(model => model.created_on)</i>
+        </div>
+        <div>
+            @Html.HiddenFor(model => model.task_syscode, new { @id = "hid_task_syscode" })
+            @*@Html.Hidden("hid_ActivityEnum", typeof(Enum_Master.ActivityEnum).ToJSONString(), new { @id = "hid_ActivityEnum" })*@
+        </div>
+    </div>
+    <div class="start-stop-btn">
+        <div class="elapsedtime d-inline-block" id="txtClock"></div>
+        <button type="button" title="Start" id="start" onclick="SaveTaskTime(this); startClock();" class="mb-1 mr-2 btn-icon btn-icon-only btn-shadow btn-dashed btn btn-outline-info btn-lg"><i class="fa fa-play-circle btn-icon-wrapper"> </i></button>
+        <button type="button" title="Stop" id="stop" onclick="SaveTaskTime(this); stopClock();" class="mb-1 btn-icon btn-icon-only btn-shadow btn-dashed btn btn-outline-danger btn-lg"><i class="fa fa-stop-circle btn-icon-wrapper"> </i></button>
+
+        <div class="date-time-data" id="txtSSTime">
+            @if (Model != null && Model.taskUserRecord != null && Model.taskUserRecord.start_time != null)
+            {
+                var str = Model.taskUserRecord.stop_time == null ? "Started On - " + Model.taskUserRecord.start_time.Value.ToString("ddd, dd MMM yyyy HH:mm:ss") : "Stopped On - " + Model.taskUserRecord.stop_time.Value.ToString("dddd, dd MMMM yyyy HH:mm:ss");
+                @str
+            }
+            else
+            {
+                var str = "Task not yet started.";
+                @str
+            }
+        </div>
+    </div>
+</div>

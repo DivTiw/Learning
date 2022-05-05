@@ -1,0 +1,188 @@
+﻿@model Task_Tracker_CommonLibrary.DomainModels.TaskDM
+@using Task_Tracker_CommonLibrary.Utility;
+@using Task_Tracker_CommonLibrary.Others
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Set Weightage";
+}
+
+<script>
+
+    $(document).ready(function () {
+
+        calculateTotalWtg();
+
+        $('.ChkPercent').change(function () {
+            calculateTotalWtg();
+        });
+    });
+
+    function calculateTotalWtg() {
+        var sum = 0;
+        $('.ChkPercent').each(function () {
+            sum += Number($(this).val());
+        });
+
+        //alert(sum);
+        $("#lblTotalWtg").text(sum);
+        if (sum > 100) {
+            bootbox.alert("Sum of Percentage cannot be greater than 100");
+        }
+
+    }
+    function Validate() {
+        var sum = 0;
+        var isempty = false;
+
+        $('.ChkPercent').each(function () {
+            if ($(this).val() == '') {
+                isempty = true;
+                return false;
+            }
+            else {
+                sum += Number($(this).val());
+            }
+        });
+        if (isempty) {
+            bootbox.alert("Please enter Weightage");
+            return false;
+        }
+        if (isempty == false && sum != 100) {
+            bootbox.alert("Sum of Percentages should be equal to 100");
+            return false;
+        }
+    }
+</script>
+
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon highpriority">
+                <i class="pe-7s-note2">
+                </i>
+            </div>
+            @if (Model != null)
+            {
+                <div>
+                    Task Reference: @Model.task_reference
+                    <div class="page-title-subheading">
+                        <i>Created By: @Model.strCreatedBy on @Model.created_on</i>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@*<div class="text-center">
+    @{
+        var success = "";
+        if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+        {
+            success = ViewBag.SuccessMessage;
+        }
+        else if (TempData["SuccessMessage"] != null)
+        {
+            success = TempData["SuccessMessage"].ToString();
+        }
+        if (success != "")
+        {
+            <script type="text/javascript">window.onload = function () { bootbox.alert("@success"); };</script>
+            <span style="color:blue;font-weight:bold;font-size:12px">@success</span>
+        }
+    }
+
+    <span style="color:red;font-weight:bold;font-size:12px">@ViewBag.ErrorMessage</span>
+</div>*@
+
+<div class="card-header-tab card-header refheader">
+    <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+        <i class="header-icon pe-7s-note icon-gradient bg-premium-dark"> </i> @if (Model != null)
+        {@Model.task_subject}
+    </div>
+</div>
+
+@using (Html.BeginForm("SaveWeightage", "Task", FormMethod.Post, new { id = "SetWeightageForm", enctype = "multipart/form-data" }))
+{
+    <div class="main-card mb-2 card">
+        <div class="card-body">
+            <div class="form-row">
+                @if (!(Model == null || Model.lstSubtasks == null || Model.lstSubtasks.Count <= 0))
+                {
+
+                    <div class="col-md-12">
+                        @Html.HiddenFor(model => model.task_syscode, new { @id = "hid_parent_task" })
+                        <label class="mb-1">Sub Tasks</label>
+                        <table class="mb-2 table table-bordered table-striped" id="WeightageTable">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Sr. No</th>
+                                    <th>Task ID</th>
+                                    <th>Subject</th>
+                                    <th class="text-center">Weightage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var row = 0;
+                                    for (var i = 0; i < Model.lstSubtasks.Count(); i++)
+                                    {
+                                        bool IsDisabled = false;
+                                        if (Model.lstSubtasks[i].task_status_syscode == (int)Enum_Master.StatusEnum.Complete)
+                                        {
+                                            IsDisabled = true;
+                                        }
+                                        row = row + 1;
+                                        var col = 0;
+                                        string strIdPart = "WeightageTable_Row" + row + "_Col";
+
+                                        <tr id=@("WeightageTable_Row"+row)>
+                                            <td class="text-center" id=@(strIdPart + ++col)>
+                                                @row
+                                                @Html.HiddenFor(model => @Model.lstSubtasks[i].task_syscode)
+                                            </td>
+                                            <td id=@(strIdPart + ++col)>
+                                                @Html.DisplayFor(model => @Model.lstSubtasks[i].task_reference, new { @class = "form-control" })
+                                            </td>
+                                            <td id=@(strIdPart + ++col)>
+                                                @Html.DisplayFor(model => @Model.lstSubtasks[i].task_subject, new { @class = "form-control" })
+                                            </td>
+                                            <td id=@(strIdPart + ++col)>
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => @Model.lstSubtasks[i].weightage, @IsDisabled ? (object)new { disabled = "disabled", @class = "form-control ChkPercent", @id = strIdPart + col + "_txtweightage", @type = "number" } : (object)new { @class = "form-control ChkPercent", @id = strIdPart + col + "_txtweightage", @type = "number" })
+                                                    <div class="input-group-append">
+                                                        <div class="input-group-text">
+                                                            <i class="fa fa-percent"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td style="text-align:right">Total Weightage (%)</td>
+                                    <td><label id="lblTotalWtg"></label></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="divider m-0"></div>
+                    <button id="btnSaveWeightage" type="submit" class="mt-0 btn btn-primary" name="Action" value="Save" onclick="return Validate();">Save</button> @*  "/ModuleWFLevelMap/Save" onclick="location.href='@Url.Action("Save", "ModuleWFLevelMap")'"*@
+                                    }
+                                    else
+                                    {
+                                        <div style="text-align:center">
+                                            No Records found!
+                                        </div>
+                                    }
+            </div>
+
+        </div>
+    </div>
+                                    }

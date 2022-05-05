@@ -1,0 +1,85 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_CommonLibrary.Utility
+@using Task_Tracker_CommonLibrary.Others
+@using Task_Tracker_Solution.Utility
+
+<div class="main-card mb-3 card">
+   
+    <div class="card-header">
+        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+            <i class="header-icon pe-7s-clock icon-gradient bg-premium-dark"> </i>Comments History
+        </div>
+        <div class="btn-actions-pane-right text-capitalize">
+            <button type="button" title="expand" class="btn-icon btn-icon-only btn collapsebtn" data-target="collapseComment">
+                <i class="pe-7s-expand1 btn-icon-wrapper"></i>
+            </button>
+        </div>
+    </div>
+    <div id="collapseComment">
+        <div class="card-body">
+            <div class="form-row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="mb-0 table table-bordered createdbymetbl">
+                            <tr>
+                                <th>Sr.No</th>
+                                <th>Comments</th>
+                                <th>File</th>
+                                <th>Details</th>
+                            </tr>
+                            @if (!(Model == null || Model.lstTrailCommentsVM == null || Model.lstTrailCommentsVM.Count <= 0))
+                            {
+                                int groupid = 0;
+                                int cnt = 0;
+                                string strComments = string.Empty;
+                                string strFile = string.Empty;
+                                string strDetails = string.Empty;
+
+                                foreach (var trail in Model.lstTrailCommentsVM)
+                                {
+                                    cnt = cnt + 1;
+                                    <tr>
+                                        <td>@cnt</td>
+                                        <td><span style='white-space:pre-wrap;'>@trail.TrailComment</span></td>
+                                        <td>@Html.FileLinkFor(Model.lstAttachments, trail.TrailFiles)</td>
+                                        <td>@trail.TrailDesc</td>
+                                    </tr>
+
+                                        @*if (trail.Activity.activity_syscode == (int)Enum_Master.ActivityEnum.Added_Comments && trail.trail_group_id != groupid)
+                                            {
+                                                strComments = trail.trail_comments;
+                                                strDetails = trail.trail_description.ToLower();
+                                                strFile = "";
+                                            }
+                                            else if (trail.Activity.activity_syscode == (int)Enum_Master.ActivityEnum.Added_File)
+                                            {
+                                                strFile = trail.trail_comments;
+                                                strDetails = trail.trail_description.ToLower();
+                                                groupid = trail.trail_group_id;
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                strComments = trail.trail_comments;
+                                            }
+                                            <tr>
+                                                <td>@strComments</td>
+                                                <td>@strFile</td>
+                                                <td>@strDetails</td>
+                                            </tr>*@
+
+                                }
+                            }
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+
+

@@ -1,0 +1,116 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_CommonLibrary.Others
+@using Task_Tracker_CommonLibrary.Utility;
+
+            <div>
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <div class="position-relative form-group">
+                            <label for="exampleEmail11" class="">*Subject </label>
+                            @*<input type="text" name="txttask_subject" id="txttask_subject" class = "form-control" value="@Model.task_subject" />*@
+                            @Html.TextBoxFor(model => model.task_subject, new { @class = "form-control", @id = "txttask_subject" })
+                            @*@Html.HiddenFor(x => x.task_subject, new { @id = "hidTaskSubject" })*@
+                            @*@Html.TextAreaFor(model => model.task_subject, new { @class = "form-control", @id = "txttask_subject", @rows = "2" })*@
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-8">
+                        <div class="position-relative form-group">
+                            <label for="exampleEmail11" class="">Task Details </label>
+                            @Html.TextAreaFor(model => model.task_details, new { @class = "form-control", @id = "txttask_details", @rows = "7" })
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <div class="position-relative form-group mb-2">
+                                    <label for="exampleEmail11" class="">Target Date</label>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(model => model.target_date, new { @class = "form-control", @id = "txttarget_date", data_toggle = "datepicker", autocomplete = "off" })
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-calendar-alt"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="position-relative form-group mb-2">
+                                    <label for="exampleEmail11" class="">Priority </label>
+                                    @Html.DropDownListFor(model => model.task_priority_syscode, Model.SLPriority ?? new SelectList(new List<SelectListItem>() { }), "--Select Priority--",
+                                        new
+                                        {
+                                            id = "ddlPriority",
+                                            @class = "form-control js-example-basic-single"
+                                        })
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="position-relative form-group mb-2">
+                                    <label for="exampleEmail11" class="">Category</label>
+                                    @Html.DropDownListFor(model => model.category_syscode, Model.SLCategory ?? new SelectList(new List<SelectListItem>() { }), "--Select Category--",
+                                             new
+                                             {
+                                                 id = "ddlCat",
+                                                 @class = "form-control js-example-basic-single"
+                                             })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="exampleEmail11" class="">Members</label>
+                            @Html.ListBoxFor(model => model.arrUserSyscodes, new MultiSelectList(Model.ddlData.Data.ExtractDDLDataForKey(DBTableNameEnums.vw_employee_master), "Value", "Text", Model.arrUserSyscodes),
+                          new
+                          {
+                              id = "ddlMembers",
+                              @class = "form-control multiselect-dropdown",
+                              multiple = "true"
+                          })
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="exampleEmail11" class="">Task Owner</label>
+                            @Html.DropDownListFor(model => model.task_owner, Model.SLDeptUsers ?? new SelectList(new List<SelectListItem>() { }), "--Select Owner--",
+                                             new
+                                             {
+                                                 id = "ddlOwner",
+                                                 @class = "form-control js-example-basic-single"
+                                             })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="exampleEmail11" class="">On Behalf of </label>
+                            @Html.DropDownListFor(model => model.task_on_behalf, Model.SLDeptUsers ?? new SelectList(new List<SelectListItem>() { }), "--Select On Behalf of --",
+                                             new
+                                             {
+                                                 id = "ddlOnBehalf",
+                                                 @class = "form-control js-example-basic-single",
+                                                 placeholder = "Select On Behalf of"
+                                             })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            @Html.Partial("_UploadFile")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider m-0"></div>
+            @*<button class="mt-2 btn btn-primary"><i class="fa fa-file btn-icon-wrapper"></i> &nbsp;Create</button>*@
+            <button type="submit" class="mt-2 btn btn-primary" id="btn_createTask" onclick="confirmSave(this)"><i class="fa fa-file btn-icon-wrapper"></i> &nbsp;Create</button>
+

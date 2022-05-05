@@ -1,0 +1,37 @@
+--///DB: common_email[build|uat]
+--insert into common_project_master(project_syscode, project_name, project_url)
+--values(25, 'TaskTracker', 'http://tasktrackeruat.jmfl.com/')
+
+--///DB: file_server_[build|uat]
+--insert into file_extension_master(file_extension)
+--values('msg')
+--insert into file_extension_master(file_extension)
+--values('sql')
+
+--insert into functionality_master(functionality_name)
+--values('Task Tracker')
+
+--insert into functionality_details(functionality_syscode, extension_syscode, project_syscode, file_size_in_bytes)
+--values(1003,1,25, 2048576);
+--insert into functionality_details(functionality_syscode, extension_syscode, project_syscode, file_size_in_bytes)
+--values(1003,1002,25, 1048576);
+--insert into functionality_details(functionality_syscode, extension_syscode, project_syscode, file_size_in_bytes)
+--values(1003,9,25, 2048576);
+--insert into functionality_details(functionality_syscode, extension_syscode, project_syscode, file_size_in_bytes)
+--values(1003,1003,25, 2048576);
+--insert into functionality_details(functionality_syscode, extension_syscode, project_syscode, file_size_in_bytes)
+--values(1003,2,25, 2048576);
+--insert into functionality_details(functionality_syscode, extension_syscode, project_syscode, file_size_in_bytes)
+--values(1003,3,25, 2048576);
+--insert into functionality_details(functionality_syscode, extension_syscode, project_syscode, file_size_in_bytes)
+--values(1003,5,25, 2048576);
+--insert into functionality_details(functionality_syscode, extension_syscode, project_syscode, file_size_in_bytes)
+--values(1003,6,25, 2048576);
+--insert into functionality_details(functionality_syscode, extension_syscode, project_syscode, file_size_in_bytes)
+--values(1003,8,25, 2048576);
+--insert into functionality_details(functionality_syscode, extension_syscode, project_syscode, file_size_in_bytes)
+--values(1003,10,25, 2048576);
+--insert into functionality_details(functionality_syscode, extension_syscode, project_syscode, file_size_in_bytes)
+--values(1003, 1004, 26, 2048576)
+--insert into functionality_details(functionality_syscode, extension_syscode, project_syscode, file_size_in_bytes)
+--values(1003,7,25, 2048576);

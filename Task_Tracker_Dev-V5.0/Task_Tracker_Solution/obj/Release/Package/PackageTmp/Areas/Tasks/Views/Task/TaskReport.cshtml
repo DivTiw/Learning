@@ -1,0 +1,155 @@
+﻿
+@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_CommonLibrary.DomainModels
+@using Task_Tracker_CommonLibrary.Utility
+@using Task_Tracker_CommonLibrary.Others
+@{
+    ViewBag.Title = "Task Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $(".ahrefView").click(function () {
+
+            var clID = $(this).attr("id");
+
+            var ids = clID.split("|");
+            var clTitle = ids[0];
+            var clSyscode = ids[1];
+
+            var requesterRemarksObject = $("#cltext-" + clSyscode);
+            var cltext = $("#cltext-" + clSyscode).val();
+
+            $("#dialogRequestedRemarks").modal();
+
+            $("#insideDialogTitle").html(clTitle);
+            $("#insideDialogRemarks").html(cltext);
+
+            return false;
+
+        });
+    });
+</script>
+@section scripts{
+    @Scripts.Render("~/bundles/TaskListJS")
+}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-note2 icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div>Task Report</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="main-card mb-1 card">
+            <div class="card-body pt-2 pb-1">
+                @{
+                    Html.RenderPartial("_SearchControl", Model.searchDTO);
+                }
+            </div>
+        </div>
+        <div class="main-card mb-3 card">
+            <div class="card-body pt-2">
+
+                <table class="mb-0 table table-bordered mytasktbl">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Sr No.</th>
+                         
+                            <th class="text-center">
+                                @Html.DisplayNameFor(model => model.task_reference)
+                            </th>
+                            <th style="width:25%">
+                                @Html.DisplayNameFor(model => model.project.project_name)
+                            </th>
+                            <th style="width:22%">
+                                @Html.DisplayNameFor(model => model.module.module_name)
+                            </th>
+                            <th style="width:30%">
+                                @Html.DisplayNameFor(model => model.task_subject)
+                            </th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Parent Task</th>
+                            <th class="text-center" style="width:12%">Modified By</th>
+                            <th class="text-center" style="width:25%">Modified On</th>
+                        </tr>
+                    </thead>
+                    @if (!(Model == null || Model.lstTaskDM == null || Model.lstTaskDM.Count <= 0))
+                    {
+                        var cnt = 0;
+
+                        foreach (var item in Model.lstTaskDM)
+                        {
+                            cnt = cnt + 1;
+                            <tr>
+                                <td class="text-center">
+                                    @cnt
+                                    @if (@item.priority != null)
+                                    {
+                                        <i class="@item.priority.priority_icon" title="@item.priority.priority_name"></i>
+                                    }
+                                </td>
+                                
+                                <td class="text-center text-muted" style="width: 80px;">
+                                    @Html.ActionLink(@Html.DisplayFor(modelItem => item.task_reference).ToString(), "ViewTask", new { id = item.task_syscode.ToString().Base64Encode() })
+                                    @Html.HiddenFor(modelItem => item.task_syscode)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.project.project_name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.module.module_name)
+                                </td>
+                                <td>
+                                    @Html.ActionLink(item.task_subject, "ViewTask", new { id = item.task_syscode.ToString().Base64Encode() })
+                                </td>
+                                @*<td>
+                                    @Html.DisplayFor(modelItem => item.owner)
+                                                </td>*@
+                                <td class="text-center">
+                                    <div class="@item.status.status_icon">
+                                        @Html.DisplayFor(modelItem => item.status.status_name)
+                                    </div>
+                                </td>
+
+
+                                <td class="text-center">
+                                    @if (item.parent_task_syscode != null)
+                                    {
+                                        @Html.ActionLink(@Html.DisplayFor(modelItem => item.parentTaskRef).ToString(), "ViewTask", new { id = item.parent_task_syscode.ToString().Base64Encode() })
+                                    }
+                                </td>
+
+
+                                <td class="text-center">
+                                        @Html.DisplayFor(modelItem => item.modified_by_Name)
+                                    </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.modified_on)
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="13" style="text-align:center">
+                                No Records found!
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

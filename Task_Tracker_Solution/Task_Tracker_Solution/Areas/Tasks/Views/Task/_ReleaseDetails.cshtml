@@ -1,0 +1,204 @@
+﻿@model Task_Tracker_Solution.Areas.Master.Models.ProjectViewModel
+
+
+<script>
+    /*Please handle below variables with care.*/
+    var isChangeTriggeredFromCode = false;
+    var isParamValChanged = false;
+    var Old_env_syscode = 0;
+
+    function captureDetailsChange()
+    {        
+        isParamValChanged = true;
+        Old_env_syscode = $('#ddlEnv option:selected').val();
+    }
+
+    function ddlEnvChange() {       
+        if (isChangeTriggeredFromCode === true) {
+            isChangeTriggeredFromCode = false;
+            return;
+        }         
+        try {            
+            var selected_env_syscode = $('#ddlEnv option:selected').val();
+            if (selected_env_syscode > 0) {
+                if (isParamValChanged === true) {
+                    bootbox.confirm("This will erase the current unsaved data, are you sure to proceed?", function (result) {
+                        if (result) {
+                            displayEnvironmentParams(selected_env_syscode);
+                        } else {
+                            isChangeTriggeredFromCode = true;                           
+                            $('#ddlEnv').val(Old_env_syscode).trigger('change');
+                            return;
+                        }
+                    });
+                } else {
+                    displayEnvironmentParams(selected_env_syscode);
+                }                
+            }
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    function displayEnvironmentParams(a_env_syscode)
+    {      
+        $.ajax({
+            url: '/Project/GetReleaseDetails',
+            type: 'GET',
+            data: {
+                "id1": $.base64.encode(proj_syscode),
+                "id2": $.base64.encode(a_env_syscode),
+            },
+            success: function (res) {
+
+                $("#insideRDDialogTitle").html("Release Details- Task Reference: " + tskref);
+                $("#insideRDDialogContent").html(res);
+                $("#dialogReleaseDetails").modal();
+            },
+            error: function (xhr, status, error) {
+                var err = jQuery.parseJSON(xhr.responseText);
+                alert(err.Message);
+            }
+        });
+    }
+     
+    function SaveJson() {
+        try {
+            isParamValChanged = true;
+            var env_syscode = $('#ddlEnv option:selected').val();            
+
+            var SaveProjDetailsJson = {
+                release_syscode: 0,
+                env_syscode: env_syscode,
+                project_syscode: proj_syscode,
+                task_syscode: task_syscode,
+                lstReleaseDetails: []
+            };
+            SaveProjDetailsJson.lstReleaseDetails = [];
+
+            $("#tblReleaseDetails tbody tr").each(function () {
+                var $tds = $(this).find('td');
+
+                var quantity1 = $tds.eq(3).find("#hid_param_syscode").val();
+                var quantity2 = $tds.eq(2).find("#param_value").val();
+
+                SaveProjDetailsJson.lstReleaseDetails.push({
+                    parameter_syscode: quantity1,
+                    parameter_value: quantity2,
+                    is_active: "true",
+                    is_deleted: "false"
+                });
+            });
+
+            $("#hid_json").val(JSON.stringify(SaveProjDetailsJson));
+            $('#dialogReleaseDetails').modal('hide');
+            return true;
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+</script>
+
+
+
+<div class="main-card mb-3">
+    @*<div class="card-header-tab card-header">
+            <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                <i class="header-icon pe-7s-note2 icon-gradient bg-premium-dark"> </i> Release Details
+            </div>
+        </div>*@
+    <div id="collapseEdit">
+        <div class="scrollbar-container ps--active-y ps">
+            <div class="form-row">
+                <div class="col-md-12">
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail11" style="font-weight:500 !important">Environment: </label>
+                        @Html.DropDownListFor(model => model.env_syscode, Model.SLEnvironment ?? new SelectList(new List<SelectListItem>() { }), "--Select Environment--",
+                               new
+                               {
+                                   id = "ddlEnv",
+                                   @class = "form-control select2",
+                                   placeholder = "Select Environment",
+                                   onchange = "ddlEnvChange(this);"
+                               })
+                    </div>
+                </div>
+            </div>
+
+            @if (Model != null && Model.project_syscode > 0 && Model.env_syscode > 0)
+            {
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label for="exampleEmail11" style="font-weight:500 !important">Release Details: </label>
+                        <table class="mb-0 table table-bordered table-striped" id="tblReleaseDetails">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width:10%">Sr. No</th>
+                                    <th style="width:20%">Parameter Name</th>
+                                    <th>Parameter Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (!(Model.lstProjDetails == null || Model.lstProjDetails.Count <= 0))
+                                {
+                                    int rowCounter = 0;
+                                    foreach (var detail in Model.lstProjDetails)
+                                    {
+                                        rowCounter = ++rowCounter;
+                                        <tr>
+
+                                            <td class="text-center">@rowCounter</td>
+                                            <td>
+                                                @Html.DisplayFor(model => detail.parameter_name, new { @id = "param_name", @class = "form-control" })
+                                            </td>
+                                            <td>
+                                                @if (detail.editable_in_release)
+                                                {
+                                                    @Html.TextBoxFor(model => detail.parameter_value
+                                                                   , new { @id = "param_value"
+                                                                         , @class = "form-control"
+                                                                         , onchange = "captureDetailsChange();"
+                                                                   })
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(model => detail.parameter_value
+                                                                    , new { @id = "param_value"
+                                                                          , @class = "form-control"
+                                                                          , @readonly = "readonly"
+                                                                    })
+                                                }
+                                            </td>
+                                            <td style="display:none">
+                                                @Html.HiddenFor(model => detail.parameter_syscode, new { @id = "hid_param_syscode" })
+                                                @Html.HiddenFor(model => detail.details_syscode, new { @id = "hid_details_syscode" })                                                
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" style="text-align:center">
+                                            No Records found!
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <button id="btnSubmit" class="mt-2 btn btn-success" onclick="return SaveJson();"><i class="fa fa-check btn-icon-wrapper"></i> &nbsp;OK</button>
+                    <button type="button" class="mt-2 ml-2 btn btn-danger" data-dismiss="modal"><span aria-hidden="true">Cancel</span><span class="sr-only">Close</span></button>
+                </div>
+                <div><b>Note:</b> <span style="color:#c35941;">Please Submit the Task to save the details in database.</span></div>
+            }
+        </div>
+
+
+
+    </div>
+</div>

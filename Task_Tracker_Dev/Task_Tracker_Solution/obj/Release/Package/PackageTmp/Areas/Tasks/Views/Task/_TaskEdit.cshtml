@@ -1,0 +1,108 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_CommonLibrary.Others
+@using Task_Tracker_CommonLibrary.Utility;
+
+<div class="main-card mb-3 card">
+    <div class="card-header-tab card-header">
+        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+            <i class="header-icon pe-7s-note2 icon-gradient bg-premium-dark"> </i> Task
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="form-row">
+            <div class="col-md-12">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class="">Comments </label>
+                    @Html.TextAreaFor(model => model.task_comment, new { @class = "form-control", @id = "txtTrail_Comments", @name= "txtTrail_Comments", @rows = "5" })
+                    @*<textarea name="txtTrail_Comments" id="txtTrail_Comments" rows="5" class="form-control"></textarea>*@ @*onchange="CreateTrailJson(this, '@Enum_Master.ActivityEnum.Added_Comments.GetDescription()', '@Convert.ToInt32(Enum_Master.ActivityEnum.Added_Comments)', '@Model.task_syscode', emp);"*@
+
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-12 addmemberdiv">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class="">Add Members</label>
+                    <div class="input-group">
+                        @Html.ListBoxFor(model => model.arrUserSyscodes, new MultiSelectList(Model.ddlData.Data.ExtractDDLDataForKey(DBTableNameEnums.vw_employee_master), "Value", "Text", Model.arrUserSyscodes),
+                          new
+                          {
+                              id = "ddlUserMembers1",
+                              @class = "form-control multiselect-dropdown",
+                              multiple = "true",
+                              data_placeholder = "Select Member",
+                              Style = "width:87%"//,
+                              //onChange = "CreateTrailJson(this, '" + Enum_Master.ActivityEnum.Added_Member.GetDescription() + "','" + Convert.ToInt32(Enum_Master.ActivityEnum.Added_Member) + "','" + Model.task_syscode + "',emp);"
+                          })
+
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <i class="fa fa-user-plus"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            @*<div class="col-md-12">
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail11" class="">Forward To</label>
+                        <div class="input-group">
+
+                            @Html.DropDownListFor(model => model.arrUserSyscodes, new MultiSelectList(Model.ddlData.Data.ExtractDDLDataForKey(DBTableNameEnums.vw_employee_master), "Value", "Text", @Model.arrUserSyscodes),
+                                                new
+                                                {
+                                                    id = "ddlForward",
+                                                    @class = "form-control multiselect-dropdown",
+                                                    multiple = "true",
+                                                    data_placeholder = "Select User",
+                                                    Style = "width:87%"
+                                                })
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <i class="fa fa-paper-plane"></i>
+                                </div>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-default" type="submit"><i class="fa fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+
+            <div class="col-md-6">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class="">Status </label>
+                    @Html.DropDownListFor(model => model.task_status_syscode, Model.SLStatus ?? new SelectList(new List<SelectListItem>() { }), "--Select Status--",
+                               new
+                               {
+                                   id = "ddlstatus",
+                                   @class = "form-control multiselect-dropdown",
+                                   placeholder = "Select Status"//,
+                                   //onChange = "CreateTrailJson(this, '" + Enum_Master.ActivityEnum.Changed_Status.GetDescription() + "','" + Convert.ToInt32(Enum_Master.ActivityEnum.Changed_Status) + "','" + Model.task_syscode + "',emp);"
+                               })
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="position-relative form-group">
+                    @Html.Partial("_UploadFile")
+                    @*<label for="exampleEmail11" class="">Attachments</label>
+                    <input name="file" id="exampleFile" type="file" class="form-control-file" onchange="GetFileNames(this);" accept=".pdf, .xls, .xlsx, .jpg, .png, .gif, .jpeg, .docx, .doc, .txt, .msg, .sql, .zip"> *@ @*onchange="CreateTrailJson(this, '@Enum_Master.ActivityEnum.Added_File.GetDescription()', '@Convert.ToInt32(Enum_Master.ActivityEnum.Added_File)', '@Model.task_syscode', emp);"*@
+                </div>
+            </div>
+
+        </div>
+
+        <div class="divider m-0"></div>
+        <button id="btnSubmit" class="mt-2 btn btn-success"><i class="fa fa-check btn-icon-wrapper"></i> &nbsp;Submit</button>
+        @*<div>
+            @Html.HiddenFor(model => model.trailJson, new { @id = "hid_trailJson" })
+        </div>*@
+
+    </div>
+</div>
+

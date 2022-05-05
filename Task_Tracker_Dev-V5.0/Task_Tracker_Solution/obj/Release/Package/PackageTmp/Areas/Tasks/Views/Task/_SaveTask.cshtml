@@ -1,0 +1,114 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_CommonLibrary.Others
+@using Task_Tracker_CommonLibrary.Utility;
+
+<div>
+    <div class="form-row">
+        <div class="col-md-12">
+            <div class="position-relative form-group">
+                <label for="exampleEmail11" class="">*Subject </label>
+                @Html.TextBoxFor(model => model.task_subject, new { @class = "form-control", @id = "txttask_subject" })
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-8">
+            <div class="position-relative form-group">
+                <label for="exampleEmail11" class="">Task Details </label>
+                @Html.TextAreaFor(model => model.task_details, new { @class = "form-control", @id = "txttask_details", @rows = "7" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-row">
+                <div class="col-md-12">
+                    <div class="position-relative form-group mb-2">
+                        <label for="exampleEmail11" class="">Target Date</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.target_date, new { @class = "form-control", @id = "txttarget_date", data_toggle = "datepicker", autocomplete = "off" })
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <i class="fa fa-calendar-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="position-relative form-group mb-2">
+                        <label for="exampleEmail11" class="">Priority </label>
+                        @Html.DropDownListFor(model => model.task_priority_syscode, Model.SLPriority ?? new SelectList(new List<SelectListItem>() { }), "--Select Priority--",
+                                        new
+                                        {
+                                            id = "ddlPriority",
+                                            @class = "form-control select2"
+                                        })
+
+                    </div>
+                </div>
+                @if (!Model.isProjectTaskPage)
+                {
+                    <div class="col-md-12">
+                        <div class="position-relative form-group mb-2">
+                            <label for="exampleEmail11" class="">Category</label>
+                            @Html.DropDownListFor(model => model.category_syscode, Model.SLCategory ?? new SelectList(new List<SelectListItem>() { }), "--Select Category--",
+                  new
+                  {
+                      id = "ddlCat",
+                      @class = "form-control select2"
+                  })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        @if (!Model.isProjectTaskPage)
+        {
+            <div class="col-md-6">
+                <div class="position-relative form-group">
+                    <label for="exampleEmail11" class="">Members</label>
+                    @Html.ListBoxFor(model => model.arrUserSyscodes, Model.MSLEmployees,
+                              new
+                              {
+                                  id = "ddlMembers",
+                                  @class = "form-control select2",
+                                  multiple = "true"
+                              })
+
+                </div>
+            </div>
+        }
+        <div class="col-md-6">
+            <div class="position-relative form-group">
+                <label for="exampleEmail11" class="">Task Owner</label>
+                @Html.DropDownListFor(model => model.task_owner, Model.SLUsers ?? new SelectList(new List<SelectListItem>() { }), "--Select Owner--",
+                                             new
+                                             {
+                                                 id = "ddlOwner",
+                                                 @class = "form-control select2"
+                                             })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="col-md-6">
+            <div class="position-relative form-group">
+                <label for="exampleEmail11" class="">On Behalf of </label>
+                @Html.DropDownListFor(model => model.task_on_behalf, Model.SLUsers ?? new SelectList(new List<SelectListItem>() { }), "--Select On Behalf of --",
+                                             new
+                                             {
+                                                 id = "ddlOnBehalf",
+                                                 @class = "form-control select2",
+                                                 placeholder = "Select On Behalf of"
+                                             })
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="position-relative form-group">
+                @Html.Partial("_UploadFile")
+            </div>
+        </div>
+    </div>
+</div>           

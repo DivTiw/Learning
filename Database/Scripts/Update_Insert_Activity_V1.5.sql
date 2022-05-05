@@ -1,0 +1,35 @@
+--insert into task_activity_master(activity_syscode, activity_name, activity_icon)
+--values(14, 'Removed Member(s)','badge-primary')
+--update task_activity_master
+--set activity_icon = 'pe-7s-plus'
+--where activity_name = 'Created'
+--update task_activity_master
+--set activity_icon = 'pe-7s-plus'
+--where activity_name = 'Created Subtask'
+--update task_activity_master
+--set activity_icon = 'pe-7s-add-user'
+--where activity_name = 'Added Member(s)'
+--update task_activity_master
+--set activity_icon = 'pe-7s-delete-user'
+--where activity_name = 'Removed Member(s)'
+--update task_activity_master
+--set activity_icon = 'pe-7s-like2'
+--where activity_name = 'Acknowledged'
+--update task_activity_master
+--set activity_icon = 'pe-7s-paperclip'
+--where activity_name = 'Added File(s)'
+--update task_activity_master
+--set activity_icon = 'pe-7s-comment'
+--where activity_name = 'Added Comments'
+--update task_activity_master
+--set activity_icon = 'pe-7s-check'
+--where activity_name = 'Closed'
+--update task_activity_master
+--set activity_icon = 'ion-android-done-all'
+--where activity_name = 'Completed'
+--update task_activity_master
+--set activity_icon = 'pe-7s-back'
+--where activity_name = 'Forwarded'
+--update task_activity_master
+--set activity_icon = 'pe-7s-repeat'
+--where activity_name = 'Changed Status'

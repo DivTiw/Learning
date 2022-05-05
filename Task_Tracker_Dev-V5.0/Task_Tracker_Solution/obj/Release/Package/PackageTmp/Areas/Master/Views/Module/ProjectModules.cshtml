@@ -1,0 +1,115 @@
+﻿@using Task_Tracker_CommonLibrary.Utility;
+@*@model IList<Task_Tracker_Solution.Areas.Master.Models.ModuleViewModel>*@
+@model Task_Tracker_Solution.Areas.Master.Models.ModuleViewModel
+
+@{
+    ViewBag.Title = "Project Modules";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string proj_syscode = "", proj_name= "", btnCreateModShow= "";
+    if (Model != null && Model.lstModuleDM.Count > 0)
+    {
+        proj_syscode = Model.project_syscode.ToString();
+        proj_name = (Model.project_name)?.ToString();
+        btnCreateModShow = Model.lstModuleDM[0].blnProjectWriteAccess ? "" : "hideMe";
+    }
+}
+
+<script src="~/Content/jquery-base64-master/jquery.base64.js"></script>
+<script src="~/Content/jquery-base64-master/jquery.base64.min.js"></script>
+
+<script type="text/javascript">
+
+    function EditModule(id) {
+        //alert(id);
+        try {
+
+            mod_syscode = $.base64.encode(id);
+            proj_name = $("#hid_project_name").val();
+            var url = '@Url.Action("EditModule", "Module", new { id = "_syscode" , projname = "_pname" })';
+            window.location.href = url.replace('_syscode', mod_syscode).replace('_pname', proj_name);
+
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+</script>
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-portfolio icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div>Modules for Project: @Model.project_name </div>
+        </div>       
+        <div class="page-title-actions">
+            <a class="@btnCreateModShow mb-2 mr-2 btn-icon btn-square btn  btn btn btn-light btn-shadow" href="@Url.Action("CreateModule", "Module", new { id=@proj_syscode.Base64Encode(), projname=@proj_name })"><i class="pe-7s-ticket btn-icon-wrapper"> </i>Create Module</a>
+        </div>
+    </div>
+</div>
+<div class="main-card mb-2 card">
+
+    <div class="card-body">
+        <table class="mb-0 table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center">Sr No.</th>
+                    <th>Module Name</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Created By</th>
+                    <th>Created On</th>
+                    <th class="text-center">Is Active</th>
+                    <th class="text-center">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!(Model == null || Model.lstModuleDM == null || Model.lstModuleDM.Count <= 0) && Model.lstModuleDM[0].module_syscode > 0)
+                {
+                    var cnt = 0;
+                    var project_syscode = 0;
+
+                    foreach (var module in Model.lstModuleDM)
+                    {
+                        cnt = cnt + 1;
+                        string EditViewClass = string.Empty;
+                        if (module.RecordHasWriteAccess)
+                        {
+                            EditViewClass = "fa-edit";
+                        }
+                        else
+                        {
+                            EditViewClass = "fa-eye";
+                        }
+                        project_syscode = module.project_syscode;
+                        <tr>
+                            <td class="text-center">@cnt</td>
+                            <td>@module.module_name</td>
+                            <td>@module.module_description</td>
+                            <td>@module.category_name</td>
+                            <td>@module.created_by_Name</td>
+                            <td>@Html.DisplayFor(m => module.created_on)</td>
+                            <td>@module.is_active.CastToYesNo()</td>
+                            <td class="text-center">
+                                <button class="border-0 btn-transition btn btn-outline-primary" onclick="EditModule(@module.module_syscode)">
+                                    <i class="fa @EditViewClass"></i>
+                                </button>
+                            </td>
+                            <td style="display:none">
+                                @Html.HiddenFor(model => model.project_syscode, new { @id = "hid_project_syscode" })
+                                @Html.HiddenFor(model => model.project_name, new { @id = "hid_project_name" })
+                            </td>
+                         
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>
+
+

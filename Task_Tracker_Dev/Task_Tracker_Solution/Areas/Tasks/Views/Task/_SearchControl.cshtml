@@ -1,0 +1,166 @@
+﻿@model Task_Tracker_CommonLibrary.DomainModels.SearchDTO
+@{
+    var controller = ViewContext.RouteData.Values["Controller"].ToString();
+    var action = ViewContext.RouteData.Values["Action"].ToString();
+    var area = ViewContext.RouteData.DataTokens["area"].ToString();
+}
+<script>
+    function ddlChange(obj, callingPage) {
+        var module_syscode = "";
+        var project_syscode = "";
+        var category_syscode = "";
+        var task_syscode = "";
+        var status_syscode = "";
+
+        try {
+            
+            project_syscode = $('#ddlproject').val();
+            module_syscode = $('#ddlmodule').val();
+            category_syscode = $('#ddlcategory').val();
+            task_syscode = $("#ddlTask").val();
+            status_syscode = $("#ddlStatus").val();
+           
+            if (obj.id.includes('project')) {
+                module_syscode = "";
+                category_syscode = "";
+                task_syscode = "";
+                //$("#ddlcategory").val('').change();
+            }
+            else if (obj.id.includes('category')) {
+                module_syscode = "";
+                task_syscode = "";
+                //$("#ddlmodule").val('').change();
+            }
+            else if (obj.id.includes('module')) {
+                task_syscode = "";
+                //$("#ddlTask").val('').change();
+            }
+
+            var FilterData = "{'project':'" + project_syscode + "', 'category':'" + category_syscode + "', 'module':'" + module_syscode + "', 'task':'" + task_syscode + "', 'status':'" + status_syscode + "'}";
+            setCookie('TaskFilterData', FilterData, 5);
+
+            //if (obj.value !== "") { //&& (obj.id.includes('category') || obj.id.includes('module'))
+            var form = $('#SearchControl');
+            form.submit();
+            //}
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+</script>
+@using (Html.BeginForm(action, controller, new { Area = area }, FormMethod.Post, new { id = "SearchControl", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(x => x.actionName, new { id = "hidActionName" })
+
+    @*<h3>@controller | @action</h3>*@
+
+    <div class="form-row">
+        <div class="col-md-4">
+            <div class="position-relative form-group">
+
+                @if (Model != null)
+                {
+                    <label for="exampleEmail11" class="">Project</label>
+                    @Html.DropDownListFor(model => model.project_syscode, Model.SLProjects ?? new SelectList(new List<SelectListItem>() { }), "--Select Project--",
+                                                                  new
+                                                                  {
+                                                                      id = "ddlproject",
+                                                                      @class = "form-control select2",
+                                                                      placeholder = "Select Project",
+                                                                      onchange = "ddlChange(this, '" + action + "');"
+                                                                  })
+                }
+
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="position-relative form-group">
+
+                @if (Model != null && Model.enableCategoryDD)
+                {
+                    <label for="exampleEmail11" class="">Category</label>
+                    @Html.DropDownListFor(model => model.category_syscode, Model.SLCategory ?? new SelectList(new List<SelectListItem>() { }), "--Select Category--",
+                                                                  new
+                                                                  {
+                                                                      id = "ddlcategory",
+                                                                      @class = "form-control select2",
+                                                                      placeholder = "Select Category",
+                                                                      onchange = "ddlChange(this, '" + action + "');"
+                                                                  })
+                }
+
+            </div>
+        </div>
+        <div class="col-md-4" id="divModuleDDL">
+            <div class="position-relative form-group">
+                @if (Model != null &&  Model.enableModuleDD && Model.SLModules != null)
+                {
+                    <label for="exampleEmail11">Module Name</label>
+                    @Html.DropDownListFor(model => model.module_syscode, Model.SLModules, "--Select Module--",
+                               new
+                               {
+                                   id = "ddlmodule",
+                                   @class = "form-control select2",
+                                   placeholder = "Select Module",
+                                   onchange = "ddlChange(this, '" + action + "');"
+                               })
+                }
+            </div>
+        </div>
+        @if (Model.enableTaskDD)
+        {
+            <div class="col-sm-4">
+                <div class="position-relative form-group">
+                    @if (Model != null)
+                    {
+                        <label for="exampleEmail11" class="">Task</label>
+                        @Html.DropDownListFor(model => model.task_syscode, Model.SLTasks ?? new SelectList(new List<SelectListItem>() { }), "--Select Root Task--",
+                                                                  new
+                                                                  {
+                                                                      id = "ddlTask",
+                                                                      @class = "form-control select2",
+                                                                      placeholder = "Select Root Task",
+                                                                      onchange = "ddlChange(this, '" + action + "');"
+                                                                  })
+                    }
+
+                </div>
+            </div>
+        }
+        <div class="col-sm-4">
+            <div class="position-relative form-group">
+                @if (Model != null)
+                {
+                    if (Model.enableTaskDD)
+                    {
+                    <label for="exampleEmail11" class="">Status</label>
+                        @Html.DropDownListFor(model => model.status_syscode, Model.SLStatus ?? new SelectList(new List<SelectListItem>() { }), "--Select Status--",
+                                                                           new
+                                                                           {
+                                                                               id = "ddlStatus",
+                                                                               @class = "form-control select2",
+                                                                               placeholder = "Select Status",
+                                                                               onchange = "ddlChange(this, '" + action + "');"
+                                                                           })
+                        }
+                    }
+
+            </div>
+        </div>
+
+        @if (Model.enableSearchTextBox)
+        {
+            <div class="col-sm-4">
+                <div class="search-wrapper active mt-3">
+                    <div class="input-holder">
+                        <input id="txtSearch" name="txtSearch" type="text" class="search-input" placeholder="Type to search">
+                        <button id="btnSearch" class="search-icon"><span></span></button>
+                        @*<button class="close"></button>*@
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+
+}

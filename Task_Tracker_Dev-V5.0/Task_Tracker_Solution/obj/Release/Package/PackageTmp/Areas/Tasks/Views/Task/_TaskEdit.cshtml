@@ -1,0 +1,145 @@
+﻿@model Task_Tracker_Solution.Areas.Tasks.Models.TaskViewModel
+@using Task_Tracker_CommonLibrary.Others
+@using Task_Tracker_CommonLibrary.Utility;
+
+<div class="main-card mb-3 card">
+    <div class="card-header-tab card-header">
+        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+            <i class="header-icon pe-7s-note2 icon-gradient bg-premium-dark"> </i> Task Action
+        </div>
+        <div class="btn-actions-pane-right text-capitalize">
+            <button type="button" title="expand" class="btn-icon btn-icon-only btn collapsebtn" data-target="collapseEdit">
+                <i class="pe-7s-expand1 btn-icon-wrapper"></i>
+            </button>
+        </div>
+    </div>
+    <div id="collapseEdit">
+        <div class="card-body pt-1">
+
+            <div class="scrollbar-container ps--active-y ps">
+
+                @if (Model.PageFieldAccesses.Count > 0 && Model.PageFieldAccesses[nameof(Model.arrUserSyscodes)])
+                {
+                    <div class="form-row">
+                        <div class="col-md-12 addmemberdiv">
+                            <div class="position-relative form-group">
+                                <label for="exampleEmail11" class="">Add Members</label>
+                                <div class="input-group">
+                                    @{
+                                        MultiSelectList empMSL = null;
+                                        if (Model.module_syscode != null && Model.module_syscode > 0)
+                                        {
+                                            empMSL = new MultiSelectList(Model.ddlData.Data.ExtractDDLDataForKey(DBTableNameEnums.GroupMember), "Value", "Text", Model.arrUserSyscodes);
+                                        }
+                                        else
+                                        {
+                                            empMSL = new MultiSelectList(Model.ddlData.Data.ExtractDDLDataForKey(DBTableNameEnums.vw_employee_master), "Value", "Text", Model.arrUserSyscodes);
+                                        }
+                                        @Html.ListBoxFor(model => model.arrUserSyscodes, empMSL,
+                              new
+                              {
+                                  id = "ddlUserMembers1",
+                                  @class = "form-control select2",
+                                  multiple = "true",
+                                  style = "width:89%",
+                                  data_placeholder = "Select Member"
+                                  //onChange = "CreateTrailJson(this, '" + Enum_Master.ActivityEnum.Added_Member.GetDescription() + "','" + Convert.ToInt32(Enum_Master.ActivityEnum.Added_Member) + "','" + Model.task_syscode + "',emp);"
+                              })
+                                    }
+                                    <div class="input-group-append">
+                                        <div class="input-group-text">
+                                            <i class="fa fa-user-plus"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                        }
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <div class="position-relative form-group">
+                            <label for="exampleEmail11" class="">Inform To</label>
+                            <div class="input-group">
+
+                                @Html.DropDownListFor(model => model.arrCCUsersSyscodes, new MultiSelectList(Model.ddlData.Data.ExtractDDLDataForKey(DBTableNameEnums.vw_employee_master), "Value", "Text", @Model.arrCCUsersSyscodes),
+                                                new
+                                                {
+                                                    id = "ddlCCTo",
+                                                    @class = "form-control select2",
+                                                    multiple = "true",
+                                                    style = "width:89%",
+                                                    data_placeholder = "Select User"
+                                                })
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-paper-plane"></i>
+                                    </div>
+                                </div>
+                                @*<div class="input-group-append">
+                                        <button class="btn btn-default" type="submit"><i class="fa fa-paper-plane"></i></button>
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="exampleEmail11" class="">Status </label>
+                            @Html.DropDownListFor(model => model.task_status_syscode, Model.SLStatus ?? new SelectList(new List<SelectListItem>() { }), "--Select Status--",
+                               new
+                               {
+                                   id = "ddlstatus",
+                                   @class = "form-control select2",
+                                   placeholder = "Select Status"//,
+                                   //onChange = "CreateTrailJson(this, '" + Enum_Master.ActivityEnum.Changed_Status.GetDescription() + "','" + Convert.ToInt32(Enum_Master.ActivityEnum.Changed_Status) + "','" + Model.task_syscode + "',emp);"
+                               })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            @Html.Partial("_UploadFile")
+                            @*<label for="exampleEmail11" class="">Attachments</label>
+                                <input name="file" id="exampleFile" type="file" class="form-control-file" onchange="GetFileNames(this);" accept=".pdf, .xls, .xlsx, .jpg, .png, .gif, .jpeg, .docx, .doc, .txt, .msg, .sql, .zip"> *@ @*onchange="CreateTrailJson(this, '@Enum_Master.ActivityEnum.Added_File.GetDescription()', '@Convert.ToInt32(Enum_Master.ActivityEnum.Added_File)', '@Model.task_syscode', emp);"*@
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="position-relative form-group">
+                                <label for="exampleEmail11" class=""><span class="fontred">*</span>Comments</label>
+                                @Html.TextAreaFor(model => model.task_comment, new { @class = "form-control", @id = "txtTrail_Comments", @name = "txtTrail_Comments", @rows = "5" })
+                                @*<textarea name="txtTrail_Comments" id="txtTrail_Comments" rows="5" class="form-control"></textarea>*@ @*onchange="CreateTrailJson(this, '@Enum_Master.ActivityEnum.Added_Comments.GetDescription()', '@Convert.ToInt32(Enum_Master.ActivityEnum.Added_Comments)', '@Model.task_syscode', emp);"*@
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divider m-0"></div>
+                    @{
+                        string hideClass = string.Empty;
+                        if (!Model.PageHasWriteAccess)
+                        {
+                            hideClass = "hideMe";
+                        }
+                    }
+                    <button id="btnSubmit" class="@hideClass ahrefView mt-2 btn btn-success" onclick="return Validate();"><i class="fa fa-check btn-icon-wrapper"></i> &nbsp;Submit</button>
+                    
+                    @if (Model != null && Model.module_syscode != null && Model.module_syscode > 0)
+                    {
+                    <a id="@Model.task_reference" class="@hideClass border-0 mt-2 btn-transition btn btn-primary ahrefViewRD" href="#">
+                        <i class="fa fa-plus" style="color:#fff"></i> Release Details
+                    </a>
+                    }
+                    @*<input type="hidden" id="hid_json" />*@
+                    @Html.HiddenFor(model=>model.releaseDetailsJson, new { @id = "hid_json" })
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>

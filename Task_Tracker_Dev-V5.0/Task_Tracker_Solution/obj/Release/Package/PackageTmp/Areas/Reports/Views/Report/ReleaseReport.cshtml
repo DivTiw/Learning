@@ -1,0 +1,182 @@
+﻿@model Task_Tracker_Solution.Areas.Master.Models.ReleaseViewModel
+@using Task_Tracker_CommonLibrary.Utility
+
+@{
+    ViewBag.Title = "Release Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Content/jquery-base64-master/jquery.base64.js"></script>
+<script src="~/Content/jquery-base64-master/jquery.base64.min.js"></script>
+
+<script id="ddlTemplate" type="text/html">
+    @using (Html.BeginForm("UpdateRelease", "Report", new { Area = "Reports" }, FormMethod.Post, new { id = "frmMarkReleased", enctype = "multipart/form-data" }))
+    {
+        <div id="divUpdateRelease" class="card-body pt-1">
+            <label for="exampleEmail11" class=""><span class="fontred">*</span>Remarks</label>
+            @Html.TextAreaFor(x => x.Remarks, 5, 20, new { id = "txt_releaseRemarks", @class = "form-control" })
+            <button id="btnUpdate" type="submit" class="mt-2 btn btn-success"><i class="fa fa-check btn-icon-wrapper"></i> &nbsp;Mark Released</button>
+            @Html.HiddenFor(x => x.release_syscode, new { id = "hid_rel_syscode" })
+            @Html.HiddenFor(x => x.task_syscode, new { id = "hid_task_syscode" })
+        </div>
+    }
+</script>
+
+<script>
+    var dialogueHtml = $('#ddlTemplate').html();
+    function markReleased(relSyscode, RelRef, taskSyscode) {
+
+        //alert(relSyscode + ' - ' + RelRef);
+
+        var cltext = dialogueHtml;
+        $("#dialogReleaseDetails").modal();
+        $("#insideRDDialogTitle").html('Release Ref: ' + RelRef);
+        $("#insideRDDialogContent").html(cltext);
+        $("#hid_rel_syscode").val(relSyscode);
+        $("#hid_task_syscode").val(taskSyscode);
+
+    }
+    function viewParameters(relSyscode, RelRef, paramjson) {
+        //alert(RelRef);
+        $.ajax({
+            url: '/Report/ViewReleaseParameters',
+            type: 'POST',
+            data: {
+                "id": $.base64.encode(relSyscode),
+                "paramsJSON": paramjson
+            },
+            success: function (res) {
+                //alert(res);
+                $("#insideRDDialogTitle").html("Release Reference: " + RelRef);
+                $("#insideRDDialogContent").html(res);
+                $("#dialogReleaseDetails").modal();
+            },
+            error: function (xhr, status, error) {
+                var err = jQuery.parseJSON(xhr.responseText);
+                alert(err.Message);
+            }
+        });
+    }
+</script>
+
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-note2 icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div>Release Report</div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @*<div class="main-card mb-1 card">
+            <div class="card-body pt-2 pb-1">
+                @{
+                    Html.RenderPartial("~/Areas/Tasks/Views/Task/_SearchControl.cshtml", Model.searchDTO);
+
+                }
+            </div>
+        </div>*@
+
+        <div class="main-card mb-3 card">
+            <div class="card-body pt-2">
+
+                @if (!(Model == null || Model.lstReleaseDM == null || Model.lstReleaseDM.Count <= 0))
+                {
+                    <div class="table-responsive filterable">
+
+                        <table class="table mb-0 table table-bordered createdbymetbl">
+                            <thead>
+                                <tr class="filters">
+                                    @{
+                                        <th class="text-center" style="width:5%">Sr No.</th>
+                                        <th>Release Ref</th>
+                                        <th class="text-center">Environment</th>
+                                        <th class="text-center">Project</th>
+                                        <th class="text-center">Task</th>
+                                        <th class="text-center">Created By</th>
+                                        <th class="text-center">Created On</th>
+                                        @*<th class="text-center">Released On</th>*@
+                                        <th class="text-center">Remarks</th>
+                                        <th>Actions</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var cnt = 0;
+
+                                    foreach (var item in Model.lstReleaseDM)
+                                    {
+                                        cnt = cnt + 1;
+                                        string rel_syscode = item.release_syscode.ToString();
+                                        string releaseIconClass = item.is_Released ? "text-success" : "text-warning";
+                                        <tr>
+                                            <td class="text-center">
+                                                <i class="fa fa-check-circle @releaseIconClass" aria-hidden="true"></i>
+                                                @cnt
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.release_ref)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.env.env_name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.project.project_name)
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink(@Html.DisplayFor(modelItem => item.task.task_subject).ToString(), "ViewTask", "Task", new { area = "Tasks", id = item.task.task_syscode.ToString().Base64Encode() }, new { })
+                                            </td>
+                                            <td class="text-center">
+                                                @Html.DisplayFor(modelItem => item.created_by_Name)
+                                            </td>
+                                            <td class="text-center">
+                                                @Html.DisplayFor(modelItem => item.created_on)
+                                            </td>
+                                            @*<td class="text-center">
+                                                @Html.DisplayFor(modelItem => item.modified_on)
+                                            </td>*@
+                                            <td class="text-center">
+                                                @Html.DisplayFor(modelItem => item.Remarks)
+                                            </td>                                   
+                                            <td class="text-center">
+                                                <a id="aViewParams" onclick="viewParameters(@rel_syscode, '@item.release_ref','@item.release_params_json');"class="mt-2" href="#">
+                                                    <i class="fa fa-eye"></i></a> &nbsp;
+                                                @if (!item.is_Released)
+                                                {
+                                                    <a id="aMarkReleased" onclick="markReleased(@rel_syscode, '@item.release_ref', @item.task.task_syscode);" class="mt-2" href="#">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                }
+                                            </td>
+                                            <td style="display:none">
+                                                @Html.HiddenFor(modelItem => item.release_syscode, new { @id = "hid_release_syscode" })
+                                                @Html.HiddenFor(modelItem => item.env_syscode, new { @id = "hid_env_syscode" })
+                                                @Html.HiddenFor(model => model.release_params_json, new { @id = "hid_relparams" })
+                                                @*@Html.HiddenFor(modelItem => item.tbl_htmlstring, new { @id = "hidtblhtml-"+@rel_syscode })*@
+
+                                            </td>                                                                 
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                                    }
+                                    else
+                                    {
+                                        <div style="text-align:center">
+                                            No Records found!
+                                        </div>
+                                    }
+            </div>
+        </div>
+    </div>
+</div>
+

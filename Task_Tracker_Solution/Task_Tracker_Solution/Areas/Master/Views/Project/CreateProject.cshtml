@@ -1,0 +1,344 @@
+﻿@using Task_Tracker_CommonLibrary.Utility;
+
+@model Task_Tracker_Solution.Areas.Master.Models.ProjectViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Content/jquery-base64-master/jquery.base64.js"></script>
+<script src="~/Content/jquery-base64-master/jquery.base64.min.js"></script>
+
+<script>
+    var ModulesJson;
+    var WorkFlowListObject;
+
+    //$(document).ready(function () {
+    //    console.log("Document loaded successfully!");
+    //    //alert("Document loaded successfully!");
+    //    var hidModulesList = $("#hid_ModulesList").val();
+    //    var hidWorkflowListObject = $("#hid_WorkflowList").val();
+
+    //    if (hidModulesList === "" || hidModulesList === "[]" || hidModulesList === null) {
+    //        ModulesJson = [{
+    //            row_Id: "1",
+    //            module_name: "",
+    //            module_syscode: "0",
+    //            workflow_syscode: "0",
+    //            project_syscode: "0",
+    //            is_active: "true",
+    //            is_deleted: "false"
+    //        }];
+    //    } else {
+    //        ModulesJson = JSON.parse(hidModulesList);
+    //    }
+    //    debugger;
+    //    if (!(hidWorkflowListObject === "" || hidWorkflowListObject === "[]" || hidWorkflowListObject === null)) {
+    //        WorkFlowListObject = JSON.parse(hidWorkflowListObject);
+    //    }
+
+    //});
+
+    //function AddRow() {
+    //    var rowCount = 0;
+    //    rowCount = ModulesJson.length + 1;
+    //    ModulesJson.push({
+    //        row_Id: rowCount,
+    //        module_name: "",
+    //        module_syscode: "0",
+    //        workflow_syscode: "0",
+    //        project_syscode: "0",
+    //        is_active: "true",
+    //        is_deleted: "false"
+    //    });
+
+    //    $('#ModuleTable').append(returnWFTableRow(rowCount));
+    //}
+
+    //function returnWFTableRow(rowCount) {
+    //    var colCounter = 0;
+    //    var strIdPart = "ModuleTableRow" + rowCount + "_Col";
+    //    var strTableRow = '<tr id="ModuleTableRow"' + rowCount + '>' +
+    //                            '<td id="' + strIdPart + colCounter++ + '" class="text-center">' + rowCount + '</td>' +
+    //                            '<td id="' + strIdPart + ++colCounter + '"><input id="' + strIdPart + colCounter + '_module_name" class="form-control" type="text" /></td>' +
+    //                            '<td id="' + strIdPart + ++colCounter + '"><select id="' + strIdPart + colCounter + '_workflow_syscode" class="form-control">' + ReturnOptions(WorkFlowListObject) + '</select></td>' +
+    //                            '<td id="' + strIdPart + ++colCounter + '" class="text-center"><input id="' + strIdPart + colCounter + '_is_active" type="checkbox" checked="checked" /></td>' +
+    //                            '<td id="' + strIdPart + ++colCounter + '" class="text-center">' +
+    //                                '<button id="' + strIdPart + colCounter + '_btnAdd" type="button" class="border-0 btn-transition btn btn-outline-primary" onclick="AddRow();"><i class="fa fa-plus"></i></button>' +
+    //                                '<input id="' + strIdPart + colCounter + '_module_syscode" name="' + strIdPart + colCounter + '_module_syscode" type="hidden" value="0">' +
+    //                             '</td>' +
+    //                       '</tr>';
+    //    return strTableRow;
+    //}
+
+    //function ReturnOptions(optionObj) {
+    //    var options = "";
+    //    for (var i = 0; i < optionObj.length; i++) {
+    //        options += '<option value="' + optionObj[i].Value + '">' + optionObj[i].Text + '</option>';
+    //    }
+    //    return options;
+    //}
+
+    function SaveJsonProcessing(obj) {
+
+        Confirm(obj);
+
+        var SaveModulesJson = [];
+
+        var intProjectSyscode = $("#hid_project_syscode").val();
+
+        //for (var i = 1; i <= ModulesJson.length; i++) {
+        //    //i = i + 1;
+        //    SaveModulesJson.push({
+        //        row_Id: i,
+        //        module_name: $("#ModuleTableRow" + i + "_Col2_module_name").val(),
+        //        module_syscode: $("#ModuleTableRow" + i + "_Col5_module_syscode").val(),
+        //        workflow_syscode: $("#ModuleTableRow" + i + "_Col3_workflow_syscode").val(),
+        //        project_syscode: intProjectSyscode,
+        //        is_active: $("#ModuleTableRow" + i + "_Col4_is_active").is(":checked"),
+        //        is_deleted: "false"
+        //    });
+        //}
+
+        //$("#hid_ModulesList").val(JSON.stringify(SaveModulesJson));
+    }
+
+    function Confirm(obj) {
+        event.preventDefault();
+        if ($('#txtproject_name').val().length == 0) {
+            bootbox.alert("Please enter Project name");
+            return;
+        }
+        if ($('#txtproject_desc').val().length == 0) {
+            bootbox.alert("Please enter Project Description");
+            return;
+        }
+        if ($('#lbReadUserList').val() == null) {
+            bootbox.alert("Please enter Read Access Users");
+            return;
+        }
+        if ($('#lbWriteUserList').val() == null) {
+            bootbox.alert("Please enter Write Access Users");
+            return;
+        }
+        bootbox.confirm("Please confirm if you want to perform this action?", function (result) {
+            if (result) {
+                //$('#' + obj.id).click(); //btnSaveProject
+                var form = $('#SaveProject');
+                form.submit();
+                return true;
+            }
+        });
+    }
+
+    @*function AddModule(id,name) {
+        //alert(id);
+        try {
+            Project_syscode = $.base64.encode(id);
+            var url = '@Url.Action("CreateModule", "Module", new { id = "_syscode", projname="_name" })';
+            window.location.href = url.replace('_syscode', Project_syscode).replace('_name', name);
+
+        } catch (e) {
+            alert(e.message);
+        }
+    }*@
+
+</script>
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-plus icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div> @ViewBag.Title </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("Submit", "Project", new { Area = "Master" }, FormMethod.Post, new { id = "SaveProject", enctype = "multipart/form-data" }))
+{
+    <div class="main-card mb-2 card">
+        <div class="card-body">
+
+            <div class="form-row">
+                <div class="col-md-10">
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail11" class="">Project Name</label>
+                        @Html.TextBoxFor(model => model.project_name, new { @class = "form-control", @id = "txtproject_name" })
+                    </div>
+                </div>
+                <div class="col-md-2 pl-5">
+                    <div class="position-relative form-group">
+                        <label>Is Active</label>
+                        <br />
+                        @Html.CheckBoxFor(model => model.is_active)
+                    </div>
+                    <div style="display:none">
+                        @Html.HiddenFor(model => model.PageHasWriteAccess, new { @id = "hid_PageAccess" })
+                        @Html.HiddenFor(model => model.project_syscode, new { @id = "hid_project_syscode" })
+                        @Html.HiddenFor(model => model.MemberListJson, new { @id = "hid_MemberList" })
+                        @*@Html.HiddenFor(model => model.ModulesListJson, new { @id = "hid_ModulesList" })
+                            @Html.HiddenFor(model => model.WorkflowListJson, new { @id = "hid_WorkflowList" })*@
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail11" class="">Description</label>
+                        @Html.TextAreaFor(model => model.project_description, new { @class = "form-control", @id = "txtproject_desc", rows = "4" })
+                        @*<textarea class="form-control" type="text" rows="4"></textarea>*@
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail11" class="">Read Access Users</label>
+
+                        @Html.ListBoxFor(model => @Model.arrReadUserSyscodes, new MultiSelectList(Model.SLGroupMembers, "Value", "Text", Model.arrReadUserSyscodes),
+                            new
+                            {
+                                id = "lbReadUserList",
+                                @class = "form-control select2",
+                                multiple = "true",
+                                data_placeholder = "Select Users"
+                            })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail11" class="">Write Access Users</label>
+                        @Html.ListBoxFor(model => @Model.arrWriteUserSyscodes, new MultiSelectList(Model.SLGroupMembers, "Value", "Text", Model.arrWriteUserSyscodes),
+                            new
+                            {
+                                id = "lbWriteUserList",
+                                @class = "form-control select2",
+                                multiple = "true",
+                                data_placeholder = "Select Users"
+                            })
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="divider m-0"></div>
+            <div class="col-md-12  pl-0">
+                @{
+                    string hideClass = string.Empty;
+                    if (!Model.PageHasWriteAccess)
+                    {
+                        hideClass = "hideMe";
+                    }
+                    else
+                    {
+                        @*<button type="button" class="mt-4 btn btn-primary" name="Action" value="save_project" onclick="SaveJsonProcessing(this);">Save Project Name</button>*@
+                        <button type="submit" id="btnSaveProject" class="mt-2 btn btn-primary" name="Action" value="save_project" onclick="SaveJsonProcessing(this);">Save Project</button>@*style="display:none"*@
+                    }
+                }
+
+                @if (Model.project_syscode > 0)
+                {
+                    <a title="Add" class="@hideClass border-0 mt-2 btn-transition btn btn-outline-primary" href="@Url.Action("CreateModule", "Module", new { id=@Model.project_syscode.ToString().Base64Encode(), projname=@Model.project_name })">
+                        <i class="fa fa-plus"> Add Module</i>
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+
+    @*if (Model.project_syscode > 0)
+        {
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <h5 class="card-title">Add Module</h5>
+                    <table class="mb-0 table table-bordered table-striped" id="ModuleTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Sr. No</th>
+                                <th>Module Name</th>
+                                <th>Workflow</th>
+                                <th class="text-center">Is Active</th>
+                                <th class="text-center">Add</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model == null || Model.project_syscode == 0 || Model.lstModules == null || Model.lstModules.Count == 0)
+                        {
+                            int rowCounter = 0, colCounter = 0;
+                            string strIdPart = "ModuleTableRow" + ++rowCounter + "_Col";
+                                <tr id=@("ModuleTableRow" + rowCounter)>
+                                    <td class="text-center" id=@(strIdPart + ++colCounter)>1</td>
+
+                                    <td id=@(strIdPart + ++colCounter)>
+
+                                        <input id=@(strIdPart + colCounter + "_module_name") class="form-control" type="text" />
+                                    </td>
+
+                                    <td id=@(strIdPart + ++colCounter)>
+
+                                        @Html.DropDownList("ddlWorkflow", new SelectList(Model.SLWorkFlow ?? new List<Task_Tracker_CommonLibrary.DomainModels.SelectItemDTO>(), "Value", "Text"), new
+                                                                           {
+                                                                               id = strIdPart + colCounter + "_workflow_syscode",
+                                                                               @class = "form-control select2"
+                                                                               //placeholder = "Select Workflow"
+                                                                           })
+                                    </td>
+                                    <td class="text-center" id=@(strIdPart + ++colCounter)>
+
+                                        <input id=@(strIdPart + colCounter + "_is_active") type="checkbox" checked />
+                                    </td>
+                                    <td class="text-center" id=@(strIdPart + ++colCounter)>
+
+                                        <button id=@(strIdPart + colCounter +"_btnAdd") type="button" class="border-0 btn-transition btn btn-outline-primary" onclick="AddRow();">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                        @Html.Hidden(strIdPart + colCounter + "_module_syscode", 0)
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                int rowCounter = 0;
+                                foreach (var module in Model.lstModules)
+                                {
+                                    //rowCounter = rowCounter + 1;
+                                    string strIdPart = "ModuleTableRow" + ++rowCounter + "_Col";
+                                    int colCounter = 0;
+
+                                    <tr id=@("ModuleTableRow" + rowCounter)>
+
+                                        <td class="text-center" id=@( strIdPart + ++colCounter)>@rowCounter</td>
+
+                                        <td id=@(strIdPart + ++colCounter)>
+                                            @Html.TextBoxFor(model => module.module_name, new { @id = strIdPart + colCounter + "_module_name", @class = "form-control" })
+                                        </td>
+
+                                        <td id=@(strIdPart + ++colCounter)>
+                                            @Html.DropDownListFor(model => module.workflow_syscode, new SelectList(Model.SLWorkFlow ?? new List<Task_Tracker_CommonLibrary.DomainModels.SelectItemDTO>(), "Value", "Text", module.workflow_syscode),
+                                                             new
+                                                             {
+                                                                 id = strIdPart + colCounter + "_workflow_syscode",
+                                                                 @class = "form-control select2"
+                                                             })
+                                        </td>
+
+                                        <td class="text-center" id=@(strIdPart + ++colCounter)>
+                                            @Html.CheckBoxFor(model => module.is_active, new { @id = strIdPart + colCounter + "_is_active" })
+                                        </td>
+
+                                        <td class="text-center" id=@(strIdPart + ++colCounter)>
+                                            <button id=@(strIdPart + colCounter +"_btnAdd") type="button" class="border-0 btn-transition btn btn-outline-primary" onclick="AddRow();">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                            @Html.HiddenFor(model => module.module_syscode, new { @id = strIdPart + colCounter + "_module_syscode" })
+                                        </td>
+                                    </tr>
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                    <div class="divider m-0"></div>
+                    <button type="submit" id="btnSaveModules" class="mt-2 btn btn-primary" name="Action" value="save_modules" onclick="SaveJsonProcessing(this);">Save Project Modules</button>
+                </div>
+            </div>
+        }*@
+                    }
+

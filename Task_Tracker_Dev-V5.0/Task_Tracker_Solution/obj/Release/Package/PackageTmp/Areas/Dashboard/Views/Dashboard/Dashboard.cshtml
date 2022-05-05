@@ -1,0 +1,120 @@
+﻿@model  Task_Tracker_CommonLibrary.DomainModels.DashBoard
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-user icon-gradient bg-premium-dark">
+                </i>
+            </div>
+            <div>Management Dashboard</div>
+        </div>
+    </div>
+</div>
+
+<!-- Working User List for manager Starts  -->
+
+<div class="main-card mb-3 card">
+    <div class="card-header border-0">
+        Current Activity
+    </div>
+    <div class="card-body pt-0">
+
+        <table class="mb-0 table table-bordered">
+            <tr>
+                <th>
+                </th>
+                <th class="text-center">Sr No.</th>
+                <th style="width:12%">
+                    Employee Name
+                </th>
+                <th style="width:15%">
+                    @Html.DisplayNameFor(model => model.project.project_name)
+                </th>
+                <th style="width:15%">
+                    @Html.DisplayNameFor(model => model.module.module_name)
+                </th>
+                <th style="width:15%">
+                    Parent Task Subject
+                </th>
+                <th style="width:15%">
+                    Task Subject
+                </th>
+                <th class="text-center">Start Time</th>
+                <th class="text-center">Stop Time</th>
+                <th class="text-center">Duration</th>
+            </tr>
+            @if (Model != null && Model.lstWorkingUsers != null)
+            {
+                var cnt = 0;
+                foreach (var item in Model.lstWorkingUsers)
+                {
+                    cnt = cnt + 1;
+                    string cssClass = "";
+                    //if (item.isWorking) { cssClass = "activeusers"; };
+                    <tr class=@cssClass>
+                        <td class="text-center">
+                            @if (item.isWorking)
+                            {
+                                <div class="activeuserbtn"></div>
+                            }
+                            else
+                            {
+                                <div class="deactiveuserbtn"></div>
+                            }
+                        </td>
+                        <td class="text-center">@cnt</td>
+                        <td style="width: 80px;">
+                            @Html.DisplayFor(modelItem => item.emp_name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.project_name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.module_name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.parent_task_subject)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.task_subject)
+                        </td>
+
+                        <td align="center">
+                            @Html.Label(item.start_time != null ? item.start_time.Value.ToString("dd/MMM/yyyy HH:mm") : "")
+                        </td>
+                        <td align="center">
+                            @Html.Label(item.stop_time != null ? item.stop_time.Value.ToString("dd/MMM/yyyy HH:mm") : "")
+
+                        </td>
+                        <td align="center">
+                            @Html.DisplayFor(modelItem => item.duration)
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="9" style="text-align:center">
+                        No Records found!
+                    </td>
+                </tr>
+            }
+        </table>
+
+    </div>
+</div>
+
+<!-- Working User List for manager Ends  -->
+
+@{
+    //Html.RenderPartial("_UserData", @Model);
+}
+
+
+

@@ -1,0 +1,63 @@
+﻿<script>
+    function ValidateFile(fileObj) {
+        if (fileObj === null) {
+            return false;
+        }
+        var mUploadID = '#' + fileObj.id;//vControlClassName.replace('.', '#');
+        //alert($("#file").val());
+        if ($(mUploadID).val() == "") {
+            bootbox.alert("<div class='text-danger'>Please select file to upload</div>");
+            return false;
+        }
+
+        var _validFileExtensions = ["pdf", "xls", "xlsx", "jpg", "png", "gif", "jpeg", "docx", "doc", "txt", "msg", "sql", "zip"]; //["xls", "xlsx", "pdf", "docx", "doc", "txt"];
+
+        $.each($(mUploadID)[0].files, function (index, mFile) {
+
+            //var mFile = $(mUploadID)[0].files[0];
+            //alert(mFile);
+            var mFileName = mFile.name;
+            //alert(mFileName);
+
+            //var fileType = $(mUploadID).val().split('\\').pop();
+            //alert(fileType);
+            //var arr1 = new Array;
+            //arr1 = fileType.split("\\");
+            //var len = arr1.length;
+            //var img1 = arr1[len - 1];
+            var filext = mFileName.substring(mFileName.lastIndexOf(".") + 1);
+
+            //var uploadedFile = document.getElementById(fileObj.id);//vControlClassName.replace('.', '')
+            var fileSize = mFile.size;//uploadedFile.files[0].size;
+
+            var blnValid = false;
+            for (var j = 0; j < _validFileExtensions.length; j++) {
+                var sCurExtension = _validFileExtensions[j];
+                if (_validFileExtensions[j] == filext.toLowerCase()) {
+                    blnValid = true;
+                    break;
+                }
+            }
+
+            if (blnValid == false) {
+                bootbox.alert("<div class='text-danger'>Invalid File " + mFileName + "!! Please select valid file format.('pdf', 'xls', 'xlsx', 'jpg', 'png', 'gif', 'jpeg', 'docx', 'doc', 'txt', 'msg', 'sql', 'zip')</div>");
+                $(mUploadID).val('');
+                return false;
+            }
+
+            if (fileSize > 2048576 && filext.toLowerCase != 'zip') {//FILE SIZE!! If File size is less than 4194304 it showes invalid file it means the file is required above 4194308
+                bootbox.alert("<div class='text-danger'>Invalid File " + mFileName + "!! File size cannot be greater than 2 MB. </div>");
+                $(mUploadID).val('');
+                return false;
+            }
+            if (fileSize > 6291456 && filext.toLowerCase == 'zip') {
+                bootbox.alert("<div class='text-danger'>Invalid File " + mFileName + "!! File size cannot be greater than 6 MB. </div>");
+                $(mUploadID).val('');
+                return false;
+            }
+        });
+        return true;
+    }
+</script>
+<label>Attachment</label>
+<input name="UploadFile" id="UploadFile" type="file" class="form-control-file" multiple onchange="ValidateFile(this);" accept=".pdf, .xls, .xlsx, .jpg, .png, .gif, .jpeg, .docx, .doc, .txt, .msg, .sql, .zip">
